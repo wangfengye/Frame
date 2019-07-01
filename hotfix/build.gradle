@@ -11,7 +11,8 @@ android {
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"
-
+        multiDexEnabled true
+        multiDexKeepFile file('multiDexKeep.keep')
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
     }
@@ -23,7 +24,15 @@ android {
         }
     }
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+        preDexLibraries = false
+        additionalParameters = ['--multi-dex', '--main-dex-list='+ project.rootDir.absolutePath + '/hotfix/multiDexKeep.keep', '--minimal-main-dex',
+                                '--set-max-idx-number=1000']
+    }
+
 }
+
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -33,4 +42,5 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+    api 'com.android.support:multidex:1.0.3'
 }
