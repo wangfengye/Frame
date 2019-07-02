@@ -31,6 +31,16 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
     * android.enableD8=false 必须设为false(gradle.properties)
     * 修改maindexlist后建议删除build重新编译
     * 分包测试使用的是gradle命令执行打包
+    
+#### AOP
+* Java动态代理
+    * 纯原生实现,思路清晰,代码量少
+    * 解耦不如aspectJ彻底,(例如:调用必须自己建立代理类;注解传参,反射麻烦)
+* AspectJ框架
+    * notice
+        * 必须使用对应的最新版,使用低版本可能build失败
+    * 通过注解指定切面,插入切面代码,完成后使用简单
+    * 编写切面相对复杂,需引入三方包
 
 #### 插件化 
 //todo:
