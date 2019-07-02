@@ -8,6 +8,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.maple.hotfix.test.FixDemo;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(this, "无修复包", Toast.LENGTH_SHORT).show();
         }
         copyFile(sourece, target);
+        Toast.makeText(this,"加载修复dex成功",Toast.LENGTH_SHORT).show();
     }
 
     /**
@@ -90,6 +93,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showVersion(View view) {
-        FixDemo.d(this);
+       new FixDemo().d(this);
     }
 }

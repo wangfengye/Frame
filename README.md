@@ -25,6 +25,12 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
     * 在进程最早的位置调用插桩代码,完成类替换
     * 测试方式:安装apk,修复apk,打包,将其中修改的dex,冲入sdcard根目录,点击加载文件,重启修复完成.
     * multiDexKeepFile 指定文本,配置主dex中的类,避免热修复替换不需要的这些类.
+* 分包问题
+    * min=19时指定分包有效,min=21时无效todo
+    * 指定文件后,会将该文件调用的部分类一同打入主包.
+    * android.enableD8=false 必须设为false(gradle.properties)
+    * 修改maindexlist后建议删除build重新编译
+    * 分包测试使用的是gradle命令执行打包
 
 #### 插件化 
 //todo:

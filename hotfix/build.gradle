@@ -1,10 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+    signingConfigs {
+        config {
+            keyAlias '111111'
+            keyPassword '111111'
+            storeFile file('D:/testkey.jks')
+            storePassword '111111'
+        }
+    }
     compileSdkVersion 28
-
-
-
     defaultConfig {
         applicationId "com.maple.hotfix"
         minSdkVersion 21
@@ -12,35 +17,42 @@ android {
         versionCode 1
         versionName "1.0"
         multiDexEnabled true
-        multiDexKeepFile file('multiDexKeep.keep')
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
     }
-
+     dexOptions {
+         javaMaxHeapSize "4g"
+         preDexLibraries = false
+         additionalParameters = [
+                 '--multi-dex',//多dex分包
+                 '--set-max-idx-number=60000',//每个包内方法数上限
+                 '--main-dex-list='+projectDir+'/maindexlist.txt', //打包到主classes.dex的文件列表
+                 '--minimal-main-dex'
+         ]
+     }
     buildTypes {
+        debug {
+            multiDexKeepFile file('maindexlist.txt')
+            signingConfig signingConfigs.config
+        }
         release {
-            minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            multiDexKeepFile file('maindexlist.txt')
+         //   minifyEnabled false
+          //  proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.config
         }
     }
-
-    dexOptions {
-        javaMaxHeapSize "4g"
-        preDexLibraries = false
-        additionalParameters = ['--multi-dex', '--main-dex-list='+ project.rootDir.absolutePath + '/hotfix/multiDexKeep.keep', '--minimal-main-dex',
-                                '--set-max-idx-number=1000']
-    }
-
 }
 
 
 dependencies {
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
-
+    implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
-    api 'com.android.support:multidex:1.0.3'
+    implementation 'com.android.support:multidex:1.0.3'
+}
+task p(){
+    print(projectDir)
 }

@@ -19,7 +19,8 @@ public class BaseApplication extends Application{
     @Override
     protected void attachBaseContext(Context base) {//最先执行的代码
         super.attachBaseContext(base);
-        MultiDex.install(this);
-        FixDexUtils.loadFixedDex(this);
+        MultiDex.install(base);
+        // 插入修复dex
+        FixDexUtils.loadFixedDex(base);
     }
 }
