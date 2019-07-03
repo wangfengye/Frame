@@ -35,15 +35,17 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
 #### AOP
 * Java动态代理
     * 纯原生实现,思路清晰,代码量少
-    * 解耦不如aspectJ彻底,(例如:调用必须自己建立代理类;注解传参,反射麻烦)
+    * 解耦不如aspectJ彻底,(例如:调用必须自己建立代理类;
+    注解传参,反射麻烦)
 * AspectJ框架
     * notice
         * 必须使用对应的最新版,使用低版本可能build失败
     * 通过注解指定切面,插入切面代码,完成后使用简单
     * 编写切面相对复杂,需引入三方包
 
-#### 插件化 
-//todo:
-> 通过代理ProxyActivity加载第三方activity.
+#### 插件化 (mainApplication,pluginmain, plugincore)
+
+> 核心: Java类加载机制. 通过代理ProxyActivity加载第三方activity. 难点(构造插件的资源管理器,插件activity方法必须使用ProxyActivity
+的context,需要重写大量方法.)
 
 

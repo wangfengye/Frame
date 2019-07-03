@@ -15,7 +15,9 @@
             <option value="$PROJECT_DIR$/aroutert2" />
             <option value="$PROJECT_DIR$/hotfix" />
             <option value="$PROJECT_DIR$/livedatabus" />
+            <option value="$PROJECT_DIR$/myapplication" />
             <option value="$PROJECT_DIR$/plugincore" />
+            <option value="$PROJECT_DIR$/pluginmain" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
