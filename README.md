@@ -48,6 +48,16 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
 > 核心: Java类加载机制. 通过代理ProxyActivity加载第三方activity. 难点(构造插件的资源管理器,插件activity方法必须使用ProxyActivity
 的context,需要重写大量方法.)
 
+实现过程
+ * 创建DexClassLoader加载dex
+ * 创建 Resource加载资源
+ * 提供代理Activity 控制生命周期,提供展示路径
+ 
+ 存在问题
+ * 第三方插件必须按规范编写,所有Activity必须基于BaseActivity.
+ * 插件中用到的所content相关方法必须重写.
 ##### [APK优化](youhua.md)
+
+##### [IOC(butterknife)](ioc.md)
 
 

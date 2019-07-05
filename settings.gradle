@@ -1,1 +1,1 @@
-include ':app', ':hotfix', ':plugincore', ':livedatabus', ':arouter', ':aroutert1', ':aroutert2', ':aop', ':myapplication', ':pluginmain'
+include ':app', ':hotfix', ':plugincore', ':livedatabus', ':arouter', ':aroutert1', ':aroutert2', ':aop', ':myapplication', ':pluginmain', ':ioc'
