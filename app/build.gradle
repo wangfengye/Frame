@@ -9,6 +9,15 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        // svg 生成png
+ //       vectorDrawables.generatedDensities('xhdpi','xxhdpi')
+        // support-v7兼容(5.0+)
+        vectorDrawables.useSupportLibrary=true
+        //只保留制定和默认的资源
+        resConfigs('zh-rCN')
+        ndk{
+            abiFilter("armeabi")
+        }
     }
     buildTypes {
         release {
