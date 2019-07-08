@@ -19,6 +19,7 @@
             <option value="$PROJECT_DIR$/myapplication" />
             <option value="$PROJECT_DIR$/plugincore" />
             <option value="$PROJECT_DIR$/pluginmain" />
+            <option value="$PROJECT_DIR$/sophix" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
