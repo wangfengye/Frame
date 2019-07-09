@@ -13,6 +13,7 @@
             <option value="$PROJECT_DIR$/arouter" />
             <option value="$PROJECT_DIR$/aroutert1" />
             <option value="$PROJECT_DIR$/aroutert2" />
+            <option value="$PROJECT_DIR$/eventbus" />
             <option value="$PROJECT_DIR$/hotfix" />
             <option value="$PROJECT_DIR$/ioc" />
             <option value="$PROJECT_DIR$/livedatabus" />
