@@ -20,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         EventBus.get().register(this);
     }
 
-    @Subscribe(ThreadMode.MAIN)
+    @Subscribe
     public void observer(EventBean bean) {
         Log.i("Main", Thread.currentThread().getName() + "\n" + bean.toString());
         Toast.makeText(this, Thread.currentThread().getName() + "\n" + bean.toString(), Toast.LENGTH_SHORT).show();

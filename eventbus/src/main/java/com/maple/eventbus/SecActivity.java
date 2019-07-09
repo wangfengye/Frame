@@ -23,7 +23,7 @@ public class SecActivity extends AppCompatActivity {
         EventBus.get().unRegister(this);
     }
 
-    @Subscribe(value = ThreadMode.MAIN,stricky = true)
+    @Subscribe(value = ThreadMode.MAIN, sticky = true)
     public void observer(EventBean bean) {
         Toast.makeText(this, Thread.currentThread().getName() + "\n" + bean.toString(), Toast.LENGTH_SHORT).show();
     }

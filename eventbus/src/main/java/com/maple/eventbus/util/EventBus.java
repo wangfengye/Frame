@@ -18,7 +18,7 @@ import java.util.Map;
 public class EventBus {
     private HashMap<Object, List<SubscribeMethod>> cacheMap = new HashMap<>();
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    private HashMap<Class<?>, Object> strickyCache = new HashMap<>();
+    private HashMap<Class<?>, Object> stickyCache = new HashMap<>();
 
     public static EventBus get() {
         return Holder.INSTANCE;
@@ -41,8 +41,8 @@ public class EventBus {
                 }
                 sm.setType(method.getParameterTypes()[0]);
                 tmp.add(sm);
-                if (anno.stricky()&&strickyCache.get(sm.getType())!=null){//推送粘性任务
-                    dispatch(sm,o,strickyCache.get(sm.getType()));
+                if (anno.sticky()&& stickyCache.get(sm.getType())!=null){//推送粘性任务
+                    dispatch(sm,o, stickyCache.get(sm.getType()));
                 }
             }
             t = t.getSuperclass();
@@ -56,7 +56,7 @@ public class EventBus {
 
     public void post(Object o) {
         Class c = o.getClass();
-        strickyCache.put(c, o);
+        stickyCache.put(c, o);
         for (final Map.Entry<Object, List<SubscribeMethod>> entry : cacheMap.entrySet()) {
             List<SubscribeMethod> tmp = entry.getValue();
             if (tmp == null || tmp.size() <= 0) continue;

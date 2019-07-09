@@ -14,5 +14,5 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Subscribe {
     ThreadMode value()default ThreadMode.MAIN;
-    boolean stricky() default false;
+    boolean sticky() default false;
 }
