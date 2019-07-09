@@ -8,7 +8,27 @@ BaseDao,初始化(打开数据库,建表,拿到数据库引用,根据注解获�
 DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
 
 #### LiveDataBus
-* 基于Android 新组件LiveData的事件总线,简化代码,减少第三方依赖
+> 基于Android 新组件LiveData的事件总线,简化代码,减少第三方依赖, 
+数据持有类,持有数据并提供数据监听的能力,与Lifecycle绑定,在生命周期内有限.
+通信方案
+* Handler
+	* 原生,线程通信
+	* 劣:高耦合,易泄露,代码复杂
+* Broadcast
+	* 简单
+	* 低性能,传播数据有限,
+* Interface
+	*简单,快
+	* 耦合严重.
+* EventBus
+	* 接入简单
+	* 代码逻辑松散,易泄露
+* Rxbus	
+	* 效率高,无泄漏
+	* 包大,学习成本高
+* LivedataBus
+	* 感知生命周期(Activity,Fragment,Service),基于官方LiveData.无泄漏,
+	* 个人感觉进阶版RxBus(加入了生命周期感知,官方支持)
 
 #### arouter
 * 阿里ARouter路由框架.

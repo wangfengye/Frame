@@ -1,6 +1,5 @@
-package com.maple.livedatabus;
+package com.maple.livedatabus.guangfang;
 
-import android.arch.core.internal.SafeIterableMap;
 import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
@@ -9,13 +8,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
-import java.io.File;
-import java.lang.annotation.Retention;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +19,7 @@ import java.util.Map;
  * @version v1.0
  * @see 1040441325@qq.com
  */
+
 public class LiveDataBus {
     public static final String TAG = "LiveDataBus";
     private final Map<String, MyMutableLiveData<Object>> bus;
@@ -50,24 +46,27 @@ public class LiveDataBus {
     public MutableLiveData<Object> with(String target) {
         return with(target, Object.class);
     }
-    private static class BusObserver<T> implements Observer<T>{
+
+    private static class BusObserver<T> implements Observer<T> {
         private Observer<T> observer;
 
         public BusObserver(Observer<T> observer) {
             this.observer = observer;
         }
+
         @Override
         public void onChanged(@Nullable T t) {
-            if(observer!=null){
+            if (observer != null) {
                 if (!isCallOnObserve()) observer.onChanged(t);
             }
         }
-        private boolean isCallOnObserve(){
-            StackTraceElement[] stackTrace= Thread.currentThread().getStackTrace();
-            if (stackTrace !=null&&stackTrace.length>0){
+
+        private boolean isCallOnObserve() {
+            StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+            if (stackTrace != null && stackTrace.length > 0) {
                 for (StackTraceElement s : stackTrace) {
                     if ("android.arch.lifecycle.LiveData".equals(s.getClassName())
-                            && "observeForever".equals(s.getMethodName())){//若是observeFor调用,则发送的是最近发送的一条消息,无需发送
+                            && "observeForever".equals(s.getMethodName())) {//若是observeFor调用,则发送的是最近发送的一条消息,无需发送
                         return true;
                     }
                 }
@@ -75,6 +74,7 @@ public class LiveDataBus {
             return false;
         }
     }
+
     private static class MyMutableLiveData<T> extends MutableLiveData<T> {
         private Map<Observer, Observer> observerMap = new HashMap<>();
 

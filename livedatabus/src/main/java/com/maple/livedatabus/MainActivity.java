@@ -1,12 +1,15 @@
 package com.maple.livedatabus;
 
-import android.arch.lifecycle.Observer;
+
 import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
+
+import com.maple.livedatabus.livedata.LiveDataBus;
+import com.maple.livedatabus.livedata.Observer;
 
 public class MainActivity extends AppCompatActivity {
 
