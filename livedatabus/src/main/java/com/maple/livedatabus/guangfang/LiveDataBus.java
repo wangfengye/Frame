@@ -4,6 +4,8 @@ import android.arch.lifecycle.LifecycleOwner;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.Observer;
+import android.graphics.Canvas;
+import android.graphics.RectF;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
@@ -30,6 +32,7 @@ public class LiveDataBus {
 
     private static class Holder {
         private static final LiveDataBus INSTANCE = new LiveDataBus();
+
     }
 
     public static LiveDataBus get() {
@@ -40,6 +43,7 @@ public class LiveDataBus {
         if (!bus.containsKey(target)) {
             bus.put(target, new MyMutableLiveData<>());
         }
+
         return (MutableLiveData<T>) bus.get(target);
     }
 

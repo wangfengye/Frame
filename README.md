@@ -80,5 +80,6 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
 
 ##### [IOC(butterknife)](ioc.md)
 ##### [sopHix](sopHix.md)
+##### [UI渲染](uiRender.md)
 
 
