@@ -84,4 +84,5 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
 #####[EventBus实现]
 > 全局单例,观察者模式, 注解标记,反射缓存方法,
 
-
+#####[网络监听框架实现]
+> 类似EventBus的实现;`ConnectivityManager.NetworkCallback`代替广播监听系统网络切换.
