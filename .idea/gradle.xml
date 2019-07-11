@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/eventbus" />
             <option value="$PROJECT_DIR$/hotfix" />
             <option value="$PROJECT_DIR$/ioc" />
+            <option value="$PROJECT_DIR$/keepalive" />
             <option value="$PROJECT_DIR$/livedatabus" />
             <option value="$PROJECT_DIR$/myapplication" />
             <option value="$PROJECT_DIR$/plugincore" />

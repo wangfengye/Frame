@@ -32,16 +32,18 @@ public class MainActivity extends AppCompatActivity {
     public void lisWifi(NetType type) {
         Log.i(TAG, "lisWifi: " + (type == NetType.NONE ? "断开" : "连接"));
     }
+
     @NetWork(NetType.CMWAP)
     public void lisCMWAP(NetType type) {
         Log.i(TAG, "lisCMWAP: " + (type == NetType.NONE ? "断开" : "连接"));
     }
+
     @NetWork(NetType.AUTO)
     public void lisAUTO(NetType type) {
         Log.i(TAG, "lisAUTO: " + (type == NetType.NONE ? "断开" : "连接"));
     }
 
     public void goSettting(View view) {
-        NetworkUtil.openSetting(this,666);
+        NetworkUtil.openSetting(this, 666);
     }
 }
