@@ -53,7 +53,7 @@ public class SopHix {
             Replace anno = method.getAnnotation(Replace.class);
             if (anno == null) continue;
             Log.i(TAG, "find fix method: "+ method.getName());
-            Class wrongClazz = Class.forName(anno.clazz());
+            Class<?> wrongClazz = Class.forName(anno.clazz());
             Method wrongMethod = wrongClazz.getMethod(anno.method(), method.getParameterTypes());
             replace(wrongMethod,method);
         }
