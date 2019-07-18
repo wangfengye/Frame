@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void nativeLoad(View view) {
-        GifLoader.with(path, img).canLoop().speed(800).start();
+        GifLoader.with(path, img).canLoop().speed(100).descStart();
     }
 
 

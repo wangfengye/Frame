@@ -70,6 +70,38 @@ public class GifLoader {
         }).start();
     }
 
+    public void descStart() {//由于后帧是基于前一帧的修改,倒序导致部分画面缺失,不能实现
+        threadId++;
+        final int currentId = threadId;
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                unRender(currentId);
+            }
+        }).start();
+    }
+
+    private void unRender(int currentId) {
+        for (int i = maxIndex - 1; i >= 0; i--) {
+            if (threadId != currentId) return;
+            long time = renderFrameN(gifInfo, mBitmap, i);
+            // mainThread;
+            handler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mView.setImageBitmap(mBitmap);
+                }
+            });
+            try {
+                Thread.sleep(time * 100 / speed);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (canLoop && i == 0) {
+                i = maxIndex;
+            }
+        }
+    }
 
     private volatile int threadId;
 
