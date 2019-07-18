@@ -94,3 +94,9 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
 
 ### [应用保活](keepalive.md)
 ### [图片优化](skia.md)
+### [Gif加载]
+> 引用[Giflib](https://sourceforge.net/projects/giflib/)高效加载gif的库,提升Gif性能,练习JNI基础,
+native部分主要通过库函数解析gif文件获取信息, 将像素信息填充到bitmap对应的C结构中.
+
+* 测试看来,首次加载,性能优于Glide的默认加载.
+* [基于giflib封装的一个andorid gif加载库](https://github.com/koral--/android-gif-drawable)
