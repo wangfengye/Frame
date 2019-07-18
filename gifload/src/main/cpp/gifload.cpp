@@ -63,7 +63,7 @@ Java_com_example_gifload_GifLoader_renderFrameN(JNIEnv *env, jobject instance, j
 
 }
 
-#define   argb(a, r, g, b)(((a)&0xff)<<24)|(((0)&0xff)<<16)|(((0)&0xff)<<8)|((0)&0xff)
+#define   argb(a, r, g, b)(((a)&0xff)<<24)|(((b)&0xff)<<16)|(((g)&0xff)<<8)|((r)&0xff)
 #define dispose(ext)(((ext)->Bytes[0]&0x1c)>>2)
 #define trans_index(ext)((ext)->Bytes[3])
 #define transparency(ext)((ext)->Bytes[0] &1)
