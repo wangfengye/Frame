@@ -100,3 +100,7 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 
 * 测试看来,首次加载,性能优于Glide的默认加载.
 * [基于giflib封装的一个andorid gif加载库](https://github.com/koral--/android-gif-drawable)
+
+### 不规则图形的绘制
+* 纯色图, 取像素颜色进行点击目标的区分
+* `Region`判断点击区域.

@@ -21,7 +21,7 @@
         android:layout_margin="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="注入事件一(跳转编译期实现方案)"/>
+        android:text="注入事件一"/>
     <Button
         android:id="@+id/btn_sec"
         android:layout_margin="32dp"

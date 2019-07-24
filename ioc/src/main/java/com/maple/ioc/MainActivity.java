@@ -1,5 +1,6 @@
 package com.maple.ioc;
 
+import android.content.Intent;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,6 +11,9 @@ import com.maple.ioc.utils.EventBaseOnclick;
 import com.maple.ioc.utils.InjectView;
 import com.maple.ioc.utils.OnClick;
 
+/**
+ * IOC, 运行时通过反射实现.
+ */
 @ContentView(R.layout.activity_main)
 public class MainActivity extends BaseActivity {
     @InjectView(R.id.tv_main)
@@ -24,6 +28,7 @@ public class MainActivity extends BaseActivity {
     @OnClick({R.id.btn_fir})
     void click(View view) {
         Toast.makeText(this, "inject event 1 success", Toast.LENGTH_SHORT).show();
+        startActivity(new Intent(MainActivity.this,Main2Activity.class));
     }
 
     @EventBaseOnclick({R.id.btn_sec})
