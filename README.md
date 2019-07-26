@@ -39,7 +39,7 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
        
 #### hotFix(Tinker方式,冷启动修复;java层代码修复)
 > 修复原理:classLoader加载机制,同名类默认加载第一个,android dex加载按dexElements顺序加载,由此通过反射等操作将修复的类打包
-成dex文件,并将其插入dexElements首位,顶替被修复的类.
+成dex文件,并将其插入dexElements首位,顶替被修复的类.(懒加载机制,dexElements数组按序加载.)
 
 * 注意点    
     * 在进程最早的位置调用插桩代码,完成类替换

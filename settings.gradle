@@ -1,1 +1,1 @@
-include ':app', ':hotfix', ':plugincore', ':livedatabus', ':arouter', ':aroutert1', ':aroutert2', ':aop', ':myapplication', ':pluginmain', ':ioc', ':sophix', ':eventbus', ':wifiutil', ':keepalive', ':skia', ':gifload', ':ocr', ':simple', ':ann_butterknife', ':ann_compiler_butterknife'
+include ':app', ':hotfix', ':plugincore', ':livedatabus', ':arouter', ':aroutert1', ':aroutert2', ':aop', ':myapplication', ':pluginmain', ':ioc', ':sophix', ':eventbus', ':wifiutil', ':keepalive', ':skia', ':gifload', ':simple', ':ann_butterknife', ':ann_compiler_butterknife'
