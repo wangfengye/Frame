@@ -81,7 +81,7 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
 ##### [IOC(butterknife)](ioc.md)
 ##### [sopHix](sopHix.md)
 ##### [UI渲染](uiRender.md)
-#####[EventBus实现]
+##### [EventBus实现]
 > 全局单例,观察者模式, 注解标记,反射缓存方法,
 
 #####[网络状态监听框架实现]
