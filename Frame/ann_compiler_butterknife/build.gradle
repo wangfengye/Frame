@@ -1,0 +1,18 @@
+apply plugin: 'java-library'
+
+tasks.withType(JavaCompile) {
+    options.encoding = "UTF-8"
+}
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    api 'com.google.auto.service:auto-service:1.0-rc4'
+    implementation project(path: ':ann_butterknife')
+    // android3.4.+ AND gradle 5.1.1+ 使用下面替换上面
+    /*annotationProcessor 'com.google.auto.service:auto-service:1.0-rc4'
+    compileOnly 'com.google.auto.service:auto-service:1.0-rc4'*/
+
+}
+
+sourceCompatibility = "7"
+targetCompatibility = "7"

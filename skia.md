@@ -1,4 +1,4 @@
-## 图片压缩
+## 图片压缩[参考](https://www.cmonbaby.com/posts/images_compress.html)
 * Android原生压缩`Bitmap.compass()`进行质量/尺寸压缩
 * 鲁班压缩(Java版本)
 * native层开启jpeg的Huffman压缩.`jpeg_sturct.arith_code = false;jpeg_sturct.optimize_coding = true;`
@@ -8,6 +8,11 @@
  因此,7.0 后无需进行native层压缩.(Ps;部分厂商修改源码 导致或优先开启该功能)
 
 
+* 设置图片格式 png>jpeg>webp
+* 质量压缩  bitmap.compress(format,quality,baos)对png无效
+* 采样率压缩 BitmapFactory.Options.inSampleSize;
+* 缩放压缩.  canvas.drawBitmap(bitmap,null,rectF,null)
+* JNI开启JPEG的哈夫曼压缩.
 
 
 #### 遇到的问题

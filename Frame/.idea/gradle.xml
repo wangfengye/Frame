@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="GradleSettings">
+    <option name="linkedExternalProjectsSettings">
+      <GradleProjectSettings>
+        <option name="distributionType" value="DEFAULT_WRAPPED" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$" />
+            <option value="$PROJECT_DIR$/ann_butterknife" />
+            <option value="$PROJECT_DIR$/ann_compiler_butterknife" />
+            <option value="$PROJECT_DIR$/aop" />
+            <option value="$PROJECT_DIR$/app" />
+            <option value="$PROJECT_DIR$/arouter" />
+            <option value="$PROJECT_DIR$/aroutert1" />
+            <option value="$PROJECT_DIR$/aroutert2" />
+            <option value="$PROJECT_DIR$/eventbus" />
+            <option value="$PROJECT_DIR$/gifload" />
+            <option value="$PROJECT_DIR$/hotfix" />
+            <option value="$PROJECT_DIR$/ioc" />
+            <option value="$PROJECT_DIR$/keepalive" />
+            <option value="$PROJECT_DIR$/livedatabus" />
+            <option value="$PROJECT_DIR$/myapplication" />
+            <option value="$PROJECT_DIR$/plugincore" />
+            <option value="$PROJECT_DIR$/pluginmain" />
+            <option value="$PROJECT_DIR$/simple" />
+            <option value="$PROJECT_DIR$/skia" />
+            <option value="$PROJECT_DIR$/sophix" />
+            <option value="$PROJECT_DIR$/wifiutil" />
+          </set>
+        </option>
+        <option name="resolveModulePerSourceSet" value="false" />
+      </GradleProjectSettings>
+    </option>
+  </component>
+</project>
