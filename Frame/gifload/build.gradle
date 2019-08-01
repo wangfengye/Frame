@@ -16,7 +16,7 @@ android {
             cmake {
                 cppFlags ""
                 //兼容cpi架构
-                abiFilters 'armeabi'
+                abiFilters 'armeabi-v7a'
             }
         }
     }

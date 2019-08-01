@@ -5,5 +5,6 @@ package com.maple.arouter;
  * @version v1.0
  * @see 1040441325@qq.com
  */
-public class IRouter {
+public interface IRouter {
+    public void  putActivity();
 }

@@ -1,11 +1,8 @@
 package com.maple.ioc;
 
 
-
-import android.content.Intent;
-import android.os.IBinder;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -13,8 +10,6 @@ import android.widget.Toast;
 import com.example.ann_butterknife.BindClick;
 import com.example.ann_butterknife.BindView;
 import com.example.ann_butterknife.ButterKnife;
-import com.maple.ioc.utils.EventBaseOnclick;
-import com.maple.ioc.utils.OnClick;
 
 
 /**

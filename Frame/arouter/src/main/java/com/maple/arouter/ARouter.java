@@ -2,6 +2,7 @@ package com.maple.arouter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
 import java.util.HashMap;
@@ -22,6 +23,13 @@ public class ARouter {
     public synchronized static void init() {
         instance = new ARouter();
         //todo:初始化,加入入口类
+        try {
+            Class<?> aClass= Class.forName("com.maple.arouter1.RouteImpl");
+            Object o = aClass.newInstance();
+            if (o instanceof IRouter)((IRouter) o).putActivity();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
