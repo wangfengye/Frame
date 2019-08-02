@@ -25,6 +25,7 @@ import javax.tools.JavaFileObject;
  */
 @AutoService(Processor.class)
 public class RouteProcessor extends AbstractProcessor {
+    private static final String packageName="com.maple.arouter.apt";//生成代码的包路径
     private Filer filer;
 
     @Override
@@ -56,18 +57,15 @@ public class RouteProcessor extends AbstractProcessor {
         Set<? extends Element> fields = roundEnvironment.getElementsAnnotatedWith(Route.class);
         Writer writer = null;
         if (fields.size() <= 0) return false;
-        String packageName = null;
-        for (Element field : fields) {
-            packageName = processingEnv.getElementUtils().getPackageOf(field).toString();
-            break;
-        }
+
+
         try {
 
-            String className = ".RouteImpl" + System.currentTimeMillis();
+            String className = "RouteImpl" + System.currentTimeMillis();
             JavaFileObject file = filer.createSourceFile(packageName+"."+ className);
             writer = file.openWriter();
             writer.write("package "+packageName+";\n");
-            writer.write("public class " + className + "implements com.maple.arouter.IRouter{\n");
+            writer.write("public class " + className + " implements com.maple.arouter.IRouter{\n");
             writer.write("  @Override\n");
             writer.write("  public void putActivity() {\n");
             for (Element field : fields) {

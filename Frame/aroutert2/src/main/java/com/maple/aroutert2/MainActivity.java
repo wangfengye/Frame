@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.aroutert2_activity_main);
         // ARouter.getInstance().addRoute("jump2", this.getClass());
-        Toast.makeText(this,"2",Toast.LENGTH_SHORT).show();
+        Toast.makeText(this,"route2",Toast.LENGTH_SHORT).show();
     }
 
     public void jump(View view) {

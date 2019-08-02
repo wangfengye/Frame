@@ -12,8 +12,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.aroutert2_activity_main);
-        ARouter.init();
+        setContentView(R.layout.activity_main);
+        ARouter.init(getApplicationContext());
     }
 
     public void jump(View view) {
