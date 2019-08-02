@@ -46,5 +46,5 @@ android {
 
 * androidstudio 图片右击选择 convert to webP
 
-##### 压缩对齐,res资源混淆,//TODO 
+##### 压缩对齐,res资源混淆,7zip压缩
 
