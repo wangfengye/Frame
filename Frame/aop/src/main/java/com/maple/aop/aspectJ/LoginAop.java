@@ -3,7 +3,9 @@ package com.maple.aop.aspectJ;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcel;
 import android.util.Log;
+import android.view.View;
 
 import com.maple.aop.MainActivity;
 
@@ -28,21 +30,37 @@ public class LoginAop {
     @Pointcut("execution(@com.maple.aop.aspectJ.LoginCheck * *..*.*(..))")
     public void checkMethod() {
     }
+
+    @Pointcut("execution(@com.maple.aop.aspectJ.LogTime * *..*.*(..))")
+    public void logTime() {
+    }
+
     @Around("checkMethod()")
     public void onLoginCheck(ProceedingJoinPoint point) throws Throwable {
         Log.i(TAG, "onLoginCheck: ");
-        if (MainActivity.login){
+        if (MainActivity.login) {
             point.proceed();
-        }else {
+        } else {
             MethodSignature signature = (MethodSignature) point.getSignature();
             Method method = signature.getMethod();
             LoginCheck anno = method.getAnnotation(LoginCheck.class);
             Class clazz = anno.value();
             Object target = point.getTarget();
-            if (target instanceof Activity){
-                ((Activity) target).startActivity(new Intent((Context) target,clazz));
+            if (target instanceof Activity) {
+                ((Activity) target).startActivity(new Intent((Context) target, clazz));
             }
 
         }
+    }
+
+    @Around("logTime()")
+    public void onLogTime(ProceedingJoinPoint point) throws Throwable {
+        String clazz = point.getTarget().getClass().getSimpleName();
+        MethodSignature signature = (MethodSignature) point.getSignature();
+        Method method = signature.getMethod();
+        String methodName = method.getName();
+        long startTime = System.currentTimeMillis();
+        point.proceed();
+        Log.i(TAG, clazz + "." + methodName + " 执行耗时: " + (System.currentTimeMillis() - startTime));
     }
 }

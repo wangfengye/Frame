@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.maple.aop.aspectJ.LogTime;
 import com.maple.aop.aspectJ.LoginCheck;
 import com.maple.aop.proxy.IJump;
 import com.maple.aop.proxy.LoginHandler;
@@ -30,12 +31,12 @@ public class MainActivity extends AppCompatActivity implements IJump {
     }
 
     @Override
-   // @JumpTarget(BActivity.class)
+    @JumpTarget(BActivity.class)
     public void jump() {
         startActivity(new Intent(MainActivity.this, AActivity.class));
     }
 
-
+    @LogTime
     @LoginCheck(BActivity.class)
     public void gotoB(View view) {
         startActivity(new Intent(MainActivity.this, AActivity.class));

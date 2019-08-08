@@ -41,4 +41,14 @@
 [app启动流程 api调用图](start_process.jpg)
 
 > android 四大组件都是通过类似方式进行同信信,创建.
+
+#### 源码阅读记录
+
+* android.util.Singleton<T> 懒加载单例帮助类
+> 泛型传入需要创建的单例类,实现创建接口.
+
+* activity 通过反射创建.
+* LayoutInflater 单例
+> 获取方式 context.getSystemService ,真正实现在源码中的contextImpl中,它在调用 `SystemServiceRegistry.getSystemService`获取服务, `SystemServiceRegistry`是管理服务的一个类,源码注释
+``` //Manages all of the system services that can be returned by {@link Context#getSystemService}```
 	

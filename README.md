@@ -62,6 +62,17 @@ DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
         * 必须使用对应的最新版,使用低版本可能build失败
     * 通过注解指定切面,插入切面代码,完成后使用简单
     * 编写切面相对复杂,需引入三方包
+	* 静态织入扩展java编译器,在编译期根据定义的规则修改代码
+* Spring aop
+	* 动态织入
+	* JDK 动态代理用于对接口的代理，动态产生一个实现指定接口的类，注意动态代理有个约束：目标对象一定是要有接口的，没有接口就不能实现动态代理，只能为接口创建动态代理实例，而不能对类创建动态代理。
+
+	* CGLIB 用于对类的代理，把被代理对象类的 class 文件加载进来，修改其字节码生成一个继承了被代理类的子类。使用 cglib 就是为了弥补动态代理的不足。
+
+作者：FeelsChaotic
+链接：https://juejin.im/post/5c57b2d5e51d457ffd56ffbb
+来源：掘金
+著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 #### 插件化 (mainApplication,pluginmain, plugincore)
 
@@ -114,4 +125,4 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 * traceview,系统性能分析工具,定位耗时操作.
 * ystrace - Android4.1新增的应用性能数据采样和分析工具
 
-#### [FrameWrok之App启动](framework.md)
+#### [FrameWrok之App启动](framework/framework.md)
