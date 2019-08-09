@@ -1,6 +1,7 @@
 package com.maple.aop;
 
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +25,7 @@ public class MainActivity extends AppCompatActivity implements IJump {
         setContentView(R.layout.activity_main);
         proxy = (IJump) Proxy.newProxyInstance(getClassLoader(), new Class[]{IJump.class},
                 new LoginHandler(this));
+        new AlertDialog.Builder(this).create().show();
     }
 
     public void gotoA(View view) {
