@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.MotionEvent;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -21,7 +23,43 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        testArrayMap();
+      //  testArrayMap();
+        testTouchEvent();
+    }
+
+    /**
+     * 事件传递源码(android9.0)
+     * Q1: event中x,y是相对坐标,如何计算的
+     *  ViewGroup 源码row:2015
+     *  ```
+     *              final float offsetX = mScrollX - child.mLeft;
+     *             final float offsetY = mScrollY - child.mTop;
+     *             event.offsetLocation(offsetX, offsetY);
+     *             pointerIcon = child.onResolvePointerIcon(event, pointerIndex);
+     *             event.offsetLocation(-offsetX, -offsetY);
+     *  ```
+     *  该函数在`dispatchTransformedTouchEvent`中,ViewGroup` dispatchTouchEvent `发送给子View时,会调用该方法向去传递分发给子View.
+     *
+     *  Q2: ViewGroup在事件分发中有两个身份,1:group.2:当它是事件终点时又是view,那他是如何实现这两种`dispatchTouchEvent`;
+     *  `ViewGroup`中重写`dispatchTouchEvent`实现了作为Group时的分发,当它作为终点时会调用`super.dispatchTouchEvent`复用View中实现的分发.
+     *
+     * Q3: onTouchListen 优先级比重写onTouchEvent()优先级高
+     * 源码 View row 12507 判断是否存在onTOuchListener,没有再传递给onTouchEvent();
+     *
+     * Q4: down 之后的事件如何分发.
+     * 直接分发到接收down的事件.while 循环 `TouchTarget`这个链表找到事件接收控件.
+     * TouchTarget链式存储dispatchTouchEvent 分发down事件的控件.(头插链表)
+     *
+     */
+    private void testTouchEvent() {
+        TouchTestView ttv =findViewById(R.id.ttv);
+        ttv.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                Log.i(TAG, "onTouch: ");
+                return true;
+            }
+        });
     }
 
     /**
