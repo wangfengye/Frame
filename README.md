@@ -126,3 +126,4 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 * ystrace - Android4.1新增的应用性能数据采样和分析工具
 
 #### [FrameWrok之App启动](framework/framework.md)
+#### [模板方法AsynTask解析](framework/asyntask.md)
