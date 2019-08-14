@@ -9,6 +9,11 @@ import android.util.Log;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,6 +30,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
       //  testArrayMap();
         testTouchEvent();
+   ListView
     }
 
     /**

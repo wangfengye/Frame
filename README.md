@@ -127,3 +127,4 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 
 #### [FrameWrok之App启动](framework/framework.md)
 #### [模板方法AsynTask解析](framework/asyntask.md)
+#### [观察者模式 ListView](framework/listview.md)
