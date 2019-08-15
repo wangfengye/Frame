@@ -10,6 +10,11 @@ import java.util.List;
 public interface IBaseDao<T> {
     boolean insert(T t);
 
+    /**
+     * 根据id xiu改
+     * @param t 修改后的对象
+     * @return 是否修改成功
+     */
     boolean update(T t);
 
     boolean delete(T t);

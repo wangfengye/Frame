@@ -15,5 +15,5 @@
 
 #### note
 * ObjectAnimtor 中'scaleX'是通过反射遍历`view`中方法名进行名称匹配找到最终执行方法的.
-* Choreographer Choreographer是线程级别的单例，并且具有处理当前线程消息循环队列的功能。是vsync信号在framework层的接收者.
+* Choreographer Choreographer是线程级别的单例，并且具有处理当前线程消息循环队列的功能。Choreographer控制将绘制工作统一到vsync之后.(即接收信号,开启一次绘制)
 	

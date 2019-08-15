@@ -1,10 +1,8 @@
 package com.maple.frame.dbUtil;
 
 import android.content.ContentValues;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.os.Environment;
 import android.util.Log;
 
 import java.io.File;
@@ -24,23 +22,25 @@ public class BaseDao<T> implements IBaseDao<T> {
     private SQLiteDatabase mDatabase;
     private String mTableName;
     private HashMap<String, Field> mMap;//缓存反射得到的字段名称及字段
+    private boolean mInit;
+    private Class<?> mClz;
 
-
-    protected BaseDao(Class<T> data) {
-        String path = "/data/data/com.maple.frame/databases";
-        File dir = new File(path);
-        if (!dir.exists())
-            dir.mkdirs();
-        path += "/data.db";
-
-        this.mDatabase = SQLiteDatabase.openOrCreateDatabase(path, null);//无法自动建立目录,必须保证路径中的目录都存在
+    protected boolean init(Class<T> entity, SQLiteDatabase sqLiteDatabase) {
+        if (mInit) return true;
+        mDatabase = sqLiteDatabase;
+        mClz= entity;
         // 获取表名
-        mTableName = data.getAnnotation(Entity.class).value();
-        Field[] fields = data.getDeclaredFields();
+        mTableName = entity.getAnnotation(Entity.class).value();
+        Field[] fields = entity.getDeclaredFields();
         initMap(fields);
         //创建表
         String sql = buildCreateSql(fields);
         mDatabase.execSQL(sql);
+        mInit = true;
+        return true;
+    }
+
+    protected BaseDao() {
     }
 
     /**
@@ -58,15 +58,18 @@ public class BaseDao<T> implements IBaseDao<T> {
 
     /**
      * 创建数据库语句拼接
+     * 反射遍历,
+     * 子类可重写优化创建sql.
      *
      * @param fields 字段
      * @return sql
      */
-    private String buildCreateSql(Field[] fields) {
+    String buildCreateSql(Field[] fields) {
         StringBuilder createSql = new StringBuilder();
-        createSql.append("create table ").append(mTableName).append(" ( ");
+        createSql.append("create table if not exists ").append(mTableName).append(" ( ");
         // usertable(_id integer primary key autoincrement, sname text, snumber text) "
         for (Field f : fields) {
+            if (f.getAnnotation(DbField.class) == null) continue;
             String dbFieldName = f.getAnnotation(DbField.class).value();
             createSql.append(dbFieldName);
             if (f.getType() == int.class || f.getType() == Integer.class) {
@@ -139,19 +142,23 @@ public class BaseDao<T> implements IBaseDao<T> {
     public List<T> findAll() {
         Cursor cursor = mDatabase.query(mTableName, null, null, null, null, null, null);
         List<T> list = new ArrayList<>();
-        if (cursor.moveToFirst()){
+        if (cursor.moveToFirst()) {
             do {
-                for (Map.Entry<String, Field> e:
-                mMap.entrySet()){
-                    String name = cursor.getString(cursor. getColumnIndex(e.getKey()));
-                    Log.i(TAG, "findAll: "+name);
+                try {
+                    T t = (T) mClz.newInstance();
+                    for (Map.Entry<String, Field> e :
+                            mMap.entrySet()) {
+                        String value = cursor.getString(cursor.getColumnIndex(e.getKey()));
+                        e.getValue().set(t,value);
+                    }
+                    list.add(t);
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
 
-
-            }
-
-            while (cursor.moveToNext());
+            } while (cursor.moveToNext());
         }
+        cursor.close();
         return list;
     }
 }

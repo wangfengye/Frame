@@ -6,7 +6,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.maple.frame.dbUtil.BaseDao;
 import com.maple.frame.dbUtil.DaoFactory;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -20,10 +23,13 @@ public class MainActivity extends AppCompatActivity {
 
     }
     public void add(View v){
-       if (DaoFactory.getDao(User.class).insert(new User("map"))) Log.i(TAG, "add: true");
+       if (DaoFactory.get().getDao(BaseDao.class,User.class).insert(new User("map"))) Log.i(TAG, "add: true");
        else Log.i(TAG, "add: error");
     }
     public void find(View v){
-        DaoFactory.getDao(User.class).findAll();
+        List<User> data = DaoFactory.get().getDao(BaseDao.class, User.class).findAll();
+        for(User u: data){
+            Log.i(TAG, "find: "+u.toString());
+        }
     }
 }
