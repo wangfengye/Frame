@@ -10,6 +10,8 @@ import com.maple.frame.dbUtil.Entity;
  */
 @Entity("user")
 public class User {
+    @DbField(value = "id",key =true)
+    private Long id;
     @DbField("name")
     private String name;
 
@@ -20,10 +22,28 @@ public class User {
         this.name = name;
     }
 
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     @Override
     public String toString() {
         return "User{" +
-                "name='" + name + '\'' +
+                "id=" + id +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

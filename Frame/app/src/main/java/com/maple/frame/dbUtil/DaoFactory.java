@@ -18,11 +18,12 @@ public class DaoFactory {
 
     private DaoFactory() {
         sqliteDatabasePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/user.db";
-        File dir = new File(sqliteDatabasePath);
-      //  if (!dir.exists()) dir.mkdirs();
+        // 如果目录结构不存在要手动创建,
+      /*  File dir = new File(sqliteDatabasePath);
+     if (!dir.exists()) dir.mkdirs();*/
         sqLiteDatabase = SQLiteDatabase.openOrCreateDatabase(sqliteDatabasePath, null);
     }
-    public static DaoFactory INSTANCE = new DaoFactory();
+    private static DaoFactory INSTANCE = new DaoFactory();
     public static DaoFactory get(){
         return INSTANCE;
     }
@@ -35,7 +36,7 @@ public class DaoFactory {
                 dao.init(m,sqLiteDatabase);
                 sMap.put(t, dao);
             } catch (Exception e) {
-                throw new RuntimeException("Dao初始化异常");
+                throw new RuntimeException("Dao初始化异常"+e.getMessage());
             }
 
         } else {

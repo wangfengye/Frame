@@ -8,17 +8,22 @@ import java.util.List;
  * @see 1040441325@qq.com
  */
 public interface IBaseDao<T> {
-    boolean insert(T t);
+    long insert(T t);
 
     /**
      * 根据id xiu改
      * @param t 修改后的对象
      * @return 是否修改成功
      */
-    boolean update(T t);
+    long update(T t);
 
-    boolean delete(T t);
+    long delete(T t);
 
+    /**
+     * 根据id查询
+     * @param t
+     * @return
+     */
     T find(T t);
 
     List<T> findAll();
