@@ -5,7 +5,10 @@
 * 初步实现插入功能
 @Entity注解表名称, @DbField 注解变量名,
 BaseDao,初始化(打开数据库,建表,拿到数据库引用,根据注解获取字段名表名实现,增删改查操作.)
-DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)\
+DaoFactory,获取各个类的操作对象,(缓存对象,防止重复创建)
+* 常见框架ormlite,greendao.
+* greendao缓存机制问题
+	* greendao对查询结果进行了缓存,在一个页面对结果集修改但不更新表,也会对其他页面查询的同样数据造成污染.典型案例(数据有个select字段,查询后对该字段进行修改,但不保存至数据库,关闭页面,在打开页面,执行加载数据,select状态值有修改的状态)
 
 #### LiveDataBus
 > 基于Android 新组件LiveData的事件总线,简化代码,减少第三方依赖, 
@@ -129,3 +132,4 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 #### [模板方法AsynTask解析](framework/asyntask.md)
 #### [观察者模式 ListView](framework/listview.md)
 #### [策略模式--ValueAnimator](framework/animator.md)
+#### [Htttp框架,下载等](otherPackage/http.md)

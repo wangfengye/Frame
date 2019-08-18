@@ -1,16 +1,17 @@
 package com.maple.frame;
 
-import android.database.MatrixCursor;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.ListView;
 
 import com.maple.frame.dbUtil.BaseDao;
 import com.maple.frame.dbUtil.DaoFactory;
 
-import java.io.FileDescriptor;
-import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +23,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Log.i(TAG, "onCreate: " + MainActivity.class.getClassLoader());
+        final List<String> data = Collections.synchronizedList(new ArrayList<String>());
+        data.add("a");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                data.add("b");
+            }
+        }).start();
 
     }
 
@@ -50,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
         o.setName("after update");
         long a = DaoFactory.get().getDao(BaseDao.class, User.class).update(o);
         Log.i(TAG, "update: "+a);
+        BaseDao<User> d = DaoFactory.get().getDao(BaseDao.class, User.class);
+        d.update(o);
     }
     public void delete(View v){
         User o = new User();

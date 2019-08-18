@@ -158,6 +158,7 @@ public class BaseDao<T> implements IBaseDao<T> {
     }
     @SuppressWarnings("unchecked")
     private T getFromCursor(Cursor cursor) throws InstantiationException, IllegalAccessException {
+        // todo: 构造函数添加中间层进行对象缓存.参考greendao缓存机制
         T t = (T) mClz.newInstance();
         for (Map.Entry<String, Field> e :
                 mMap.entrySet()) {
