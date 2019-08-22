@@ -127,3 +127,4 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 #### [观察者模式 ListView](framework/listview.md)
 #### [策略模式--ValueAnimator](framework/animator.md)
 #### [Htttp框架,下载等](otherPackage/http.md)
+#### [图片加载框架分析](otherPackage/imageLoader.md)
