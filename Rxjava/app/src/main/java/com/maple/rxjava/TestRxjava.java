@@ -48,7 +48,7 @@ public class TestRxjava implements ITest {
 
                     @Override
                     public void onNext(String s) {
-                        log("onNext"+s);
+                        log("onNext" + s);
                         this.onCompleted();
                     }
                 });

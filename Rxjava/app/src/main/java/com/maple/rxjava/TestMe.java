@@ -2,6 +2,7 @@ package com.maple.rxjava;
 
 import android.util.Log;
 
+import com.maple.rxjava.me.Func1;
 import com.maple.rxjava.me.Observable;
 import com.maple.rxjava.me.OnSubscribe;
 import com.maple.rxjava.me.Subscribe;
@@ -11,6 +12,7 @@ import com.maple.rxjava.me.Subscribe;
  */
 public class TestMe implements ITest {
     public static final String TAG = "TestMe";
+
     @Override
     public void testDemo() {
         Observable.create(new OnSubscribe<String>() {
@@ -19,10 +21,16 @@ public class TestMe implements ITest {
                 log("发送:原始数据");
                 subscribe.onNext("原始数据");
             }
+        }).map(new Func1<String, String>() {
+            @Override
+            public String call(String s) {
+                log("fun1 处理中");
+                return s + "-->处理完成";
+            }
         }).subscribe(new Subscribe<String>() {
             @Override
             public void onNext(String s) {
-                log("onNext"+s);
+                log("onNext" + s);
             }
         });
     }
