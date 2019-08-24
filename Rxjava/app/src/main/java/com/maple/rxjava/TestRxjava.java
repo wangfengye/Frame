@@ -34,7 +34,7 @@ public class TestRxjava implements ITest {
                         log("处理中");
                         return s + "-->处理完成";
                     }
-                }).subscribeOn(AndroidSchedulers.mainThread())
+                }).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
