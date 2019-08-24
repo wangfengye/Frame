@@ -7,7 +7,7 @@ public class OperatorMap<T, R> implements Operator<R, T> {
     //<?,?> 转换前订阅,转换后订阅
     private Func1<? super T, ? extends R> transform;
 
-    public OperatorMap(Func1<? super T, ? extends R> transform) {
+     OperatorMap(Func1<? super T, ? extends R> transform) {
         this.transform = transform;
     }
     @Override

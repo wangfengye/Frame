@@ -24,6 +24,13 @@ public class Observable<T> {
     }
 
     private <R> Observable<R> lift(OperatorMap<T, R> trOperatorMap) {
-        return new Observable<>(new OnSubscribeLift<>(onSubscribe,trOperatorMap));
+        return create(new OnSubscribeLift<>(onSubscribe,trOperatorMap));
+    }
+
+    public  Observable<T>   subscribeOnIo(){
+        return create(new OnSubscribeOnIo<T>(this));
+    }
+    public  Observable<T>   subscribeOnAndroid(){
+        return create(new OnSubscribeOnAndroid<T>(this));
     }
 }

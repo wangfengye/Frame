@@ -11,7 +11,7 @@ import com.maple.rxjava.me.Subscribe;
  * Created by maple on 2019/8/22 17:52
  */
 public class TestMe implements ITest {
-    public static final String TAG = "TestMe";
+    private static final String TAG = "TestMe";
 
     @Override
     public void testDemo() {
@@ -21,13 +21,13 @@ public class TestMe implements ITest {
                 log("发送:原始数据");
                 subscribe.onNext("原始数据");
             }
-        }).map(new Func1<String, String>() {
+        }).subscribeOnIo().map(new Func1<String, String>() {
             @Override
             public String call(String s) {
                 log("fun1 处理中");
                 return s + "-->处理完成";
             }
-        }).subscribe(new Subscribe<String>() {
+        }).subscribeOnAndroid().subscribe(new Subscribe<String>() {
             @Override
             public void onNext(String s) {
                 log("onNext" + s);

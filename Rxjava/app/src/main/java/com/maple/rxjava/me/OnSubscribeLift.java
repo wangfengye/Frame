@@ -7,7 +7,7 @@ public class OnSubscribeLift<T, R> implements OnSubscribe<R> {
     private OnSubscribe<T> parent;
     private Operator<? extends R, ? super T> operator;
 
-    public OnSubscribeLift(OnSubscribe<T> onSubscribe,  Operator<? extends R, ? super T>  trOperatorMap) {
+     OnSubscribeLift(OnSubscribe<T> onSubscribe,  Operator<? extends R, ? super T>  trOperatorMap) {
         parent= onSubscribe;
         operator= trOperatorMap;
     }

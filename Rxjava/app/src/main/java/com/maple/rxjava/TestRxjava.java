@@ -13,7 +13,7 @@ import rx.schedulers.Schedulers;
  * rxjava使用测试
  */
 public class TestRxjava implements ITest {
-    public static final String TAG = "TestRxjava";
+    private static final String TAG = "TestRxjava";
 
     public void testDemo() {
         rx.Observable.create(new Observable.OnSubscribe<String>() {
@@ -22,7 +22,7 @@ public class TestRxjava implements ITest {
                 log("发送 原始数据");
                 subscriber.onNext("原始数据");
             }
-        }).subscribeOn(Schedulers.io()).observeOn(Schedulers.newThread())
+        }).subscribeOn(Schedulers.io())
                 .map(new Func1<String, String>() {
                     @Override
                     public String call(String s) {
@@ -34,7 +34,7 @@ public class TestRxjava implements ITest {
                         log("处理中");
                         return s + "-->处理完成";
                     }
-                }).observeOn(AndroidSchedulers.mainThread())
+                }).subscribeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
                     @Override
                     public void onCompleted() {
