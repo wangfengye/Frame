@@ -129,3 +129,4 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 #### [Htttp框架,下载等](otherPackage/http.md)
 #### [图片加载框架分析](otherPackage/imageLoader.md)
 #### [Rxjava1.0框架分析](Rxjava/readme.md)
+#### [FastJson框架分析](JsonFramework/readme.md)
