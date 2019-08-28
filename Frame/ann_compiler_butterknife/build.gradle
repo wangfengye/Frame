@@ -11,6 +11,7 @@ dependencies {
     // android3.4.+ AND gradle 5.1.1+ 使用下面替换上面
     annotationProcessor 'com.google.auto.service:auto-service:1.0-rc4'
     compileOnly 'com.google.auto.service:auto-service:1.0-rc4'
+    implementation 'com.squareup:javapoet:1.10.0'
 
 }
 

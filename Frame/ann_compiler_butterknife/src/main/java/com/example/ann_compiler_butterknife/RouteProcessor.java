@@ -22,6 +22,7 @@ import javax.tools.JavaFileObject;
 
 /**
  * Created by maple on 2019/8/1 14:59
+ * ali路由框架的代码生成, 处理@Route注解
  */
 @AutoService(Processor.class)
 public class RouteProcessor extends AbstractProcessor {

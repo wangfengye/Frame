@@ -18,7 +18,7 @@ import dalvik.system.DexFile;
  * @version v1.0
  * @see 1040441325@qq.com
  */
-public class ARouter {
+public class  ARouter {
     private static ARouter instance;
 
 

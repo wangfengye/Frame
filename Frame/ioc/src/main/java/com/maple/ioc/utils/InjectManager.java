@@ -52,14 +52,14 @@ public class InjectManager {
                 //构造callBack代理进行执行
                 ListenerHandler invo = new ListenerHandler(activity);
                 method.setAccessible(true);
-                invo.addMethod(callBack, method);
+                invo.addMethod(callBack, method);//存储真正执行的方法
 
                 Object o = Proxy.newProxyInstance(activity.getClassLoader(), new Class[]{listenerType}, invo);
 
                 for (int viewId : viewIds) {
                     View view = activity.findViewById(viewId);
                     Method setter = view.getClass().getMethod(listenerSetter, listenerType);//setOnClickListener
-                    setter.invoke(view, o);
+                    setter.invoke(view, o);//执行set函数
                 }
             }
         }

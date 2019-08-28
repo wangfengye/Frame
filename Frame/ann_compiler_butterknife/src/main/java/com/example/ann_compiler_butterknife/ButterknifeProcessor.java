@@ -2,11 +2,23 @@ package com.example.ann_compiler_butterknife;
 
 import com.example.ann_butterknife.BindClick;
 import com.example.ann_butterknife.BindView;
+import com.example.ann_butterknife.IBinder;
 import com.google.auto.service.AutoService;
+import com.squareup.javapoet.ClassName;
+import com.squareup.javapoet.JavaFile;
+import com.squareup.javapoet.MethodSpec;
+import com.squareup.javapoet.ParameterizedTypeName;
+import com.squareup.javapoet.TypeName;
+import com.squareup.javapoet.TypeSpec;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.lang.annotation.Annotation;
+import java.lang.annotation.Target;
+import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -22,6 +34,7 @@ import javax.annotation.processing.Processor;
 import javax.annotation.processing.RoundEnvironment;
 import javax.lang.model.SourceVersion;
 import javax.lang.model.element.Element;
+import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
 import javax.lang.model.element.VariableElement;
 import javax.tools.JavaFileObject;
@@ -58,7 +71,7 @@ public class ButterknifeProcessor extends AbstractProcessor {
      * 创建文件
      *
      * @param set
-     * @param roundEnvironment
+     * @param roundEnvironment env
      * @return
      */
     @Override
@@ -97,6 +110,67 @@ public class ButterknifeProcessor extends AbstractProcessor {
         if (map.size() <= 0) {
             return false;
         }
+        createByJavapoet(map);
+        return false;
+        //return createByString(map);
+    }
+
+    /**
+     * 使用javaPoet;
+     *
+     * @param map key类,后者为注解节点列表
+     */
+    private void createByJavapoet(Map<String, List<Element>> map) {
+        Iterator<String> iterator = map.keySet().iterator();
+        while (iterator.hasNext()) {
+            String clazz = iterator.next();
+            ClassName className = ClassName.bestGuess(clazz);
+            List<Element> elements = map.get(clazz);
+            TypeElement enclosingElement = (TypeElement) elements.get(0).getEnclosingElement();
+            String packageName = processingEnv.getElementUtils().getPackageOf(enclosingElement).toString();
+            TypeSpec.Builder typeSpecBuild = TypeSpec.classBuilder(clazz + "_ViewBinding")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addSuperinterface(ParameterizedTypeName.get(ClassName.get(IBinder.class), className));
+
+            MethodSpec.Builder m1Builder = MethodSpec.methodBuilder("bind")
+                    .addModifiers(Modifier.PUBLIC)
+                    .addAnnotation(Override.class)
+                    .returns(TypeName.VOID)
+                    .addParameter(className, "target", Modifier.FINAL);
+            for (Element element : elements) {
+                BindView annotation = element.getAnnotation(BindView.class);
+                if (annotation != null) {
+                    //T 类型替换 $L 直接替换
+                    m1Builder.addStatement("target.$L=($T)target.findViewById($L)", element.getSimpleName().toString()
+                            , element.asType(), annotation.value());
+                    continue;
+                }
+                BindClick anno2 = element.getAnnotation(BindClick.class);
+                if (anno2 != null) {
+                    // onClick函数在java中不存在,无法通过javaPoet函数拼接
+                    m1Builder.addStatement("target.findViewById($L).setOnClickListener(new android.view.View.OnClickListener() {\n" +
+                            "@Override\npublic void onClick(android.view.View v) {\n" +
+                            "target.$L(v);}\n})", anno2.value(), element.getSimpleName());
+                }
+            }
+            typeSpecBuild.addMethod(m1Builder.build());
+            try {
+                JavaFile.builder(packageName, typeSpecBuild.build())
+                        .addFileComment("auto create")
+                        .build().writeTo(filer);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 手动拼接类文件
+     *
+     * @param map 节点集合
+     * @return 返回false
+     */
+    private boolean createByString(Map<String, List<Element>> map) {
         Writer writer = null;
         Iterator<String> iterator = map.keySet().iterator();
         while (iterator.hasNext()) {
