@@ -30,12 +30,19 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                jsonTest();
+               // jsonTest();
+                test();
             }
         });
     }
-
-
+    // 测试object转换,通过重写setter方式实现多态,但若要根据字段判断类型,需判断字段在之前解析.
+    private void test(){
+        String ja = "{\"code\":1,\"data\":\"日志\"}";
+        Cai c1= JSON.parseObject(ja,Cai.class);
+        String ja2 = "{\"code\":1,\"data\":{\"a\":\"对象\"}}";
+        //在键值设为object时, 数据会被解析会对应类型, '{}' 结构会被解析为JsonObject
+        Cai c2= JSON.parseObject(ja2,Cai.class);
+    }
     public void jsonTest() {
 
        News news = demoData();

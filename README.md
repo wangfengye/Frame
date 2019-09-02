@@ -66,10 +66,6 @@
 
 	* CGLIB 用于对类的代理，把被代理对象类的 class 文件加载进来，修改其字节码生成一个继承了被代理类的子类。使用 cglib 就是为了弥补动态代理的不足。
 
-作者：FeelsChaotic
-链接：https://juejin.im/post/5c57b2d5e51d457ffd56ffbb
-来源：掘金
-著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。
 
 #### 插件化 (mainApplication,pluginmain, plugincore)
 
@@ -131,3 +127,5 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 #### [Rxjava1.0框架分析](Rxjava/readme.md)
 #### [FastJson框架分析](JsonFramework/readme.md)
 #### [MVC,MVP,MVVM](mvp.md)
+## 性能优化
+#### 内存泄漏(oom.md)
