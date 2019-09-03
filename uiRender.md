@@ -43,3 +43,6 @@
         //canvas绘制
         canvas.restore();
 ```
+
+* 调试模式过度绘制分析工具
+* AS -> tools -> layout inspector
