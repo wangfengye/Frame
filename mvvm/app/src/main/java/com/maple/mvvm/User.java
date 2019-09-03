@@ -109,7 +109,9 @@ public class User extends BaseObservable {
             notifyPropertyChanged(BR.keys);
         }
         public void clickText(View v){
+            MainActivity.getInstance();
             Toast.makeText(v.getContext(), desc, Toast.LENGTH_SHORT).show();
         }
     }
+
 }

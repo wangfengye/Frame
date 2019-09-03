@@ -1,6 +1,5 @@
 package com.maple.mvvm;
 
-import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.databinding.ViewDataBinding;
 import android.support.annotation.LayoutRes;
@@ -8,11 +7,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.SimpleAdapter;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by maple on 2019/8/29 14:56

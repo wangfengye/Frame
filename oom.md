@@ -42,3 +42,8 @@
 	* 分析持有此类对象引用的外部对象(右键list objects -->with incoming references)
 	* 过滤软弱虚引用.(右键merge shortest paths to gc roots-->exclude all phantom...)
 	* 逐个分析gc路径是否正常,对照代码找出异常点.
+* Allation Tracking(Android Profiler中.alloc) 追踪内存分配信息,可以直观看到某个操作的内存逐步分配.
+* android device monitor as已移除(被Android Profiler取代),进入sdk tools目录下 cmd执行monitor开启
+* LeakCanary 检测activity泄漏,可扩展fragment泄漏检测.
+* Lint 静态代码分析.提供代码规范建议
+	* 也会提供可能存在的内存泄漏信息, analyze->inspect code 生成目录下,android-lint-performance-static field leaks.
