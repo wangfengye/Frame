@@ -3,6 +3,7 @@ package com.maple.mvvm;
 import android.app.Activity;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.os.Debug;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -20,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_main);
+        Debug.startMethodTracing("sample");
         ActivityMainBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_main);
 
         user = new User();
@@ -34,7 +36,10 @@ public class MainActivity extends AppCompatActivity {
         user.setAdapter(new ComonAdapter<>(foods, R.layout.item_food, BR.food));
         binding.setUser(user);
         a=this;//模拟内存泄漏
+
     }
+
+
 
     @Override
     protected void onResume() {
@@ -44,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
                 user.setName(user.getName() + "1");
                 user.setPassword(user.getPassword() + "1");
+
             }
         }, 2000);
 
@@ -62,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
         finish();//仅finish,进程未销毁,重新打开 静态实例仍存在
+        Debug.stopMethodTracing();
         System.exit(0);
     }
 }

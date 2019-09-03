@@ -110,8 +110,19 @@ public class User extends BaseObservable {
         }
         public void clickText(View v){
             MainActivity.getInstance();
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    go(100);
+                }
+            }).start();
             Toast.makeText(v.getContext(), desc, Toast.LENGTH_SHORT).show();
         }
     }
-
+    // 测试内存占用分析
+    private static void go(int i) {
+        if(i==0)return;
+        go(i-1);
+    }
 }

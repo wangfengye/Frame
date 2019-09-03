@@ -35,15 +35,21 @@
 * 手动gc,对比两侧的.hprof分析.
 * 退出app ,查看是否仍有view,activitys实例存在
 ###### 分析工具
-* Android Memory monitor androidStudio自带(Android Profiler)
+* Android Profiler(android 分析工具合集基本包含MAT等传统工具的功能)
+	* Android Memory monitor 内存分析 可产生.hprof快照,查看某一时刻的内存分配情况,也可以记录一段时间的内存使用生成.alloc,追踪内存分配信息,可以直观看到某个操作的内存逐步分配.
+	* [traceview](https://developer.android.com/studio/profile/generate-trace-logs?hl=zh-CN) cpu分析模块
+		* 分析方法执行时间
+		* Profiler实时监控经常卡死,一般在代码中开启记录功能,生成trace文件再分析
+* LeakCanary 检测activity泄漏,可扩展fragment泄漏检测.	
+* [Lint](https://developer.android.com/studio/write/lint?hl=zh-CN) 静态代码分析.提供代码规范建议
+	* 也会提供可能存在的内存泄漏信息, analyze->inspect code 生成目录下,android-lint-performance-static field leaks.	
+
 * eclipse memory analyzer (MAT)分析.hprof文件图形化展示内存占用,并提供内存隐患(消耗大量内存的栈信息),提供快照对比功能.
 	* Dump 内存快照hprof,分析内存异常的类
 	* 进入Histogram过滤某一个异常类
 	* 分析持有此类对象引用的外部对象(右键list objects -->with incoming references)
 	* 过滤软弱虚引用.(右键merge shortest paths to gc roots-->exclude all phantom...)
 	* 逐个分析gc路径是否正常,对照代码找出异常点.
-* Allation Tracking(Android Profiler中.alloc) 追踪内存分配信息,可以直观看到某个操作的内存逐步分配.
 * android device monitor as已移除(被Android Profiler取代),进入sdk tools目录下 cmd执行monitor开启
-* LeakCanary 检测activity泄漏,可扩展fragment泄漏检测.
-* Lint 静态代码分析.提供代码规范建议
-	* 也会提供可能存在的内存泄漏信息, analyze->inspect code 生成目录下,android-lint-performance-static field leaks.
+	* 包含traveView功能
+

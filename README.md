@@ -114,9 +114,9 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 #### [Ocr身份证号识别](Ioc/Readme.md)
 #### [Android虚拟机](vm.md)
 #### ANR
-* 查看traces.txt中线程名,堆栈信息,线程专题,binder call等信息.(app anr,响应慢等时产生).
+* 查看traces.txt(目录data/anr)中线程名,堆栈信息,线程专题,binder call等信息.(app anr,响应慢等时产生).
 * traceview,系统性能分析工具,定位耗时操作.
-* ystrace - Android4.1新增的应用性能数据采样和分析工具
+* systrace - Android4.1新增的应用性能数据采样和分析工具
 
 #### [FrameWrok之App启动](framework/framework.md)
 #### [模板方法AsynTask解析](framework/asyntask.md)
