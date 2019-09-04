@@ -128,4 +128,4 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 #### [FastJson框架分析](JsonFramework/readme.md)
 #### [MVC,MVP,MVVM](mvp.md)
 ## 性能优化
-#### 内存泄漏(oom.md)
+#### [内存泄漏](oom.md)

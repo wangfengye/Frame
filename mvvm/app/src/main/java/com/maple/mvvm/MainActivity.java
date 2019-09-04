@@ -1,12 +1,16 @@
 package com.maple.mvvm;
 
 import android.app.Activity;
+import android.app.job.JobScheduler;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Debug;
 import android.os.Handler;
+import android.os.PowerManager;
+import android.support.v4.content.WakefulBroadcastReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.maple.mvvm.databinding.ActivityMainBinding;
 
@@ -35,10 +39,15 @@ public class MainActivity extends AppCompatActivity {
         foods.add(food2);
         user.setAdapter(new ComonAdapter<>(foods, R.layout.item_food, BR.food));
         binding.setUser(user);
-        a=this;//模拟内存泄漏
-
+        a = this;//模拟内存泄漏
+        // wakelock
+        PowerManager pw = (PowerManager) getSystemService(POWER_SERVICE);
+        PowerManager.WakeLock wl = pw.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK, "mvvm:mylocktag");
+        wl.acquire(1000);//设置超时自动释放锁
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        if (wl.isHeld()) wl.release();
+        JobScheduler
     }
-
 
 
     @Override
@@ -54,8 +63,10 @@ public class MainActivity extends AppCompatActivity {
         }, 2000);
 
     }
+
     public static final String TAG = "MainActivity";
     public static User mU;
+
     public static void getInstance() {
         if (mU == null) {
             mU = new User();
@@ -64,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
             Log.i(TAG, "has: ");
         }
     }
+
     @Override
     public void onBackPressed() {
         super.onBackPressed();
