@@ -1,7 +1,11 @@
 package com.maple.mvvm;
 
 import android.app.Activity;
+import android.app.job.JobInfo;
+import android.app.job.JobParameters;
 import android.app.job.JobScheduler;
+import android.app.job.JobService;
+import android.content.ComponentName;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.os.Debug;
@@ -10,6 +14,7 @@ import android.os.PowerManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.util.LruCache;
 import android.view.WindowManager;
 
 import com.maple.mvvm.databinding.ActivityMainBinding;
@@ -46,9 +51,33 @@ public class MainActivity extends AppCompatActivity {
         wl.acquire(1000);//设置超时自动释放锁
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         if (wl.isHeld()) wl.release();
-        JobScheduler
-    }
+        //JobScheduler
+        ComponentName jobService = new ComponentName(this,JobAction.class);
+        JobInfo jobInfo = new JobInfo.Builder(1, jobService)//任务id,对应的处理服务
+                .setPersisted(true)//重启保留
+                .setRequiresCharging(true)//是否充电.
+                .setRequiresDeviceIdle(true)//设备空闲状态.
+                /*  .addTriggerContentUri(uri)//监听uri对应数据改变.触发任务执行.
+                  .setTriggerContentMaxDelay(1)//监听变化到任务执行的最大延时.
+                  .setTriggerContentUpdateDelay(1)//监听触发后,但任务未执行,若content发生改变,重置延时时间*/
+                .build();
+                JobScheduler scheduler= (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+                scheduler.schedule(jobInfo);
 
+    }
+    public static class JobAction extends JobService{
+
+        @Override
+        public boolean onStartJob(JobParameters params) {
+            Log.i(TAG, "onStartJob: "+params.toString());
+            return false;
+        }
+
+        @Override
+        public boolean onStopJob(JobParameters params) {
+            return false;
+        }
+    }
 
     @Override
     protected void onResume() {
