@@ -14,3 +14,7 @@
 
 * 嵌套泛型 `ParameterizedTypeImpl`是fastJson继承并重写`ParameterizedType`用于处理嵌套泛型的类,
 * 我们自己实现的还不支持嵌套泛型
+
+#### FastJson bug
+
+* verin< 1.2.60,后台版的FastJson库,在解析以\\x结尾的字符串,未进行检测直接向后获取两位,获取到结束符.开始无限循环,内存爆炸

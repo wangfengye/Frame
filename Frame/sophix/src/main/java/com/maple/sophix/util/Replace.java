@@ -6,7 +6,7 @@ package com.maple.sophix.util;
  * @see 1040441325@qq.com
  */
 public @interface Replace {
-    String clazz();
+    String clazz();//className
 
-    String method();
+    String method();//methodName
 }

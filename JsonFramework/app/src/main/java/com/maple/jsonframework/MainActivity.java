@@ -8,6 +8,7 @@ import android.view.View;
 
 import com.alibaba.fastjson.JSON;
 
+import com.alibaba.fastjson.parser.JSONLexer;
 import com.maple.jsonframework.json.FastJson;
 
 import org.json.JSONException;
@@ -31,7 +32,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                // jsonTest();
-                test();
+                //test();
+               // fastJsonTest();
+
             }
         });
     }
@@ -55,11 +58,28 @@ public class MainActivity extends AppCompatActivity {
     private void fastJsonTest(){
         News news = demoData();
         Log.i(TAG, "元数据: " + news.toString());
-        String json = JSON.toJSONString(news);
+       String json = JSON.toJSONString(news);
         Log.i(TAG, "Object->Json: " + json);
         News after =  JSON.parseObject(json,News.class);
         Log.i(TAG, "Json->Object: " + after.toString());
         Log.i(TAG, "Json->Object: " + after.getArrays().toString());
+    }
+
+    /**
+     * 测试fastJsonBug.(Android版,无问题)
+     * 漏洞详情
+     * 漏洞的关键点在com.alibaba.fastjson.parser.JSONLexerBase#scanString中，当传入json字符串时，
+     * fastjson会按位获取json字符串，当识别到字符串为\x为开头时，会默认获取后两位字符，并将后两位字
+     * 符与\x拼接将其变成完整的十六进制字符来处理：
+     * 而当json字符串是以\x结尾时，由于fastjson并未对其进行校验，将导致其继续尝试获取后两位的字符。
+     * 也就是说会直接获取到\u001A也就是EOF,当fastjson再次向后进行解析时，会不断重复获取EOF，并将其写
+     * 到内存中，直到触发oom错误
+     * 即当你向jsoon中置入一个是以\x结尾的String("***\x"),导致死循环,不断增加内存,导致内存溢出
+     */
+    private void testBug259(){
+        String testData = "{\"a\":\"\\x\"}";
+        Object o =JSON.parse(testData);
+        Log.i(TAG, "onClick: "+o.toString());
     }
     private News demoData(){
         News news = new News();
