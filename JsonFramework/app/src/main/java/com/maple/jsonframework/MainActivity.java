@@ -31,38 +31,50 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.tv).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               // jsonTest();
-                //test();
-               // fastJsonTest();
+                jsonTest();
+                test();
+                fastJsonTest();
+                flatBufferTest();
 
             }
         });
     }
+
     // 测试object转换,通过重写setter方式实现多态,但若要根据字段判断类型,需判断字段在之前解析.
-    private void test(){
+    private void test() {
         String ja = "{\"code\":1,\"data\":\"日志\"}";
-        Cai c1= JSON.parseObject(ja,Cai.class);
+        Cai c1 = JSON.parseObject(ja, Cai.class);
         String ja2 = "{\"code\":1,\"data\":{\"a\":\"对象\"}}";
         //在键值设为object时, 数据会被解析会对应类型, '{}' 结构会被解析为JsonObject
-        Cai c2= JSON.parseObject(ja2,Cai.class);
+        Cai c2 = JSON.parseObject(ja2, Cai.class);
     }
-    public void jsonTest() {
 
-       News news = demoData();
-        Log.i(TAG, "元数据: " + news.toString());
-        String json =FastJson.toJson(news);
-        Log.i(TAG, "Object->Json: " + json);
-        News after =  FastJson.parseObject(json,News.class);
-        Log.i(TAG, "Json->Object: " + after.toString());
-    }
-    private void fastJsonTest(){
+    public void jsonTest() {
+        long time = System.currentTimeMillis();
         News news = demoData();
         Log.i(TAG, "元数据: " + news.toString());
-       String json = JSON.toJSONString(news);
+        String json = FastJson.toJson(news);
         Log.i(TAG, "Object->Json: " + json);
-        News after =  JSON.parseObject(json,News.class);
+        News after = FastJson.parseObject(json, News.class);
+        Log.i(TAG, "Json->Object: " + after.toString());
+        Log.i(TAG, "jsonTest: " + (System.currentTimeMillis() - time));
+    }
+
+    private void fastJsonTest() {
+        long time = System.currentTimeMillis();
+        News news = demoData();
+        Log.i(TAG, "元数据: " + news.toString());
+        String json = JSON.toJSONString(news);
+        Log.i(TAG, "Object->Json: " + json);
+        News after = JSON.parseObject(json, News.class);
         Log.i(TAG, "Json->Object: " + after.toString());
         Log.i(TAG, "Json->Object: " + after.getArrays().toString());
+        Log.i(TAG, "fastJsonTest: " + (System.currentTimeMillis() - time));
+    }
+
+    private void flatBufferTest() {
+        long time = System.currentTimeMillis();
+        Log.i(TAG, "flatBufferTest: " + (System.currentTimeMillis() - time));
     }
 
     /**
@@ -76,12 +88,13 @@ public class MainActivity extends AppCompatActivity {
      * 到内存中，直到触发oom错误
      * 即当你向jsoon中置入一个是以\x结尾的String("***\x"),导致死循环,不断增加内存,导致内存溢出
      */
-    private void testBug259(){
+    private void testBug259() {
         String testData = "{\"a\":\"\\x\"}";
-        Object o =JSON.parse(testData);
-        Log.i(TAG, "onClick: "+o.toString());
+        Object o = JSON.parse(testData);
+        Log.i(TAG, "onClick: " + o.toString());
     }
-    private News demoData(){
+
+    private News demoData() {
         News news = new News();
         news.setId(1);
         news.setTitle("大事件");

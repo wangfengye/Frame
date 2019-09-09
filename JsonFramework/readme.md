@@ -1,4 +1,4 @@
-### json解析框架
+## json解析框架
 
 * 泛型解析,
 > 通过 `((ParameterizedType) type).getActualTypeArguments()`
@@ -15,6 +15,13 @@
 * 嵌套泛型 `ParameterizedTypeImpl`是fastJson继承并重写`ParameterizedType`用于处理嵌套泛型的类,
 * 我们自己实现的还不支持嵌套泛型
 
+### FlatBuffer高效序列化协议
+> FlatBuffers与其他库不同之处就在于它使用二进制缓冲文件来表示层次数据，这样它们就可以被直接访问而不需解析与拆包;
+* Json解析中会产生大量临时对象,造成内存抖动,在一些大些的高响应要求项目中无法满足需求.
+* FlatBuffer 直接转化二进制处理了这个问题.内存消耗极小,速度极快.
+* 缺点: 有代码侵入,需要生成代码;生成数据无可读性,难以debug;
+
+
 #### FastJson bug
 
-* verin< 1.2.60,后台版的FastJson库,在解析以\\x结尾的字符串,未进行检测直接向后获取两位,获取到结束符.开始无限循环,内存爆炸
+* version< 1.2.60,后台版的FastJson库,在解析以\\x结尾的字符串,未进行检测直接向后获取两位,获取到结束符.开始无限循环,内存爆炸
