@@ -130,4 +130,5 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 ## 性能优化
 #### [内存泄漏](oom.md)
 #### [电量监控](电量监控.md)
-#### [JobScheduler解析](电量监控.md)
+#### [JobScheduler解析](jobScheduler.md)
+#### [Handler机制](framework/handler.md)
