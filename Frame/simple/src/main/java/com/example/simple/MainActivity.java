@@ -1,24 +1,16 @@
 package com.example.simple;
 
 import android.content.Intent;
-import android.support.v4.util.ArraySet;
+import android.os.Handler;
+import android.os.HandlerThread;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.SparseArray;
-import android.util.SparseBooleanArray;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Adapter;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -29,10 +21,39 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-      //  testArrayMap();
-        testTouchEvent();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        //  testArrayMap();
+        // testTouchEvent();
+        //  testHandlerThread();
+        testVideo();
+    }
+
+    /**
+     *  摄像头调用
+     */
+    private void testVideo() {
+        startActivity(new Intent(MainActivity.this, Video.class));
+    }
+
+    /**
+     * HandlerThread 是创建了Looper的子线程;
+     * 重写了run()启动looper循环.
+     */
+    private void  testHandlerThread(){
+        HandlerThread fetchThread = new HandlerThread("fetch_thread");
+        fetchThread.start();
+        Handler handler = new Handler(fetchThread.getLooper()){
+            @Override
+            public void handleMessage(Message msg) {
+                Log.i(TAG, "handleMessage: "+Thread.currentThread().getName() + "---"+msg.what);
+            }
+        };
+        handler.sendMessage(Message.obtain(handler,1));
+    }
     /**
      * 事件传递源码(android9.0)
      * Q1: event中x,y是相对坐标,如何计算的
@@ -81,7 +102,7 @@ public class MainActivity extends AppCompatActivity {
      *      Bundle使用ArrayMap保存数据
      */
     private void testIntentTransforData(){
-        Intent intent = new Intent(MainActivity.this, Main2Activity.class);
+        Intent intent = new Intent(MainActivity.this, Video.class);
         Bundle bundle = new Bundle();
         // 构造 1M数据 char 两个字节
         char[] tmp = new char[509 * 1024];
