@@ -30,4 +30,6 @@ oom_adj
 	* Activity设置` android:excludeFromRecents="true"android:taskAffinity="包"`
 *前台服务
 *双进程守护(java层,不同进程的前台service)
-* JobShcedu
+* JobShceduler固化任务,定时检测
+* NDK ,Native双进程守护
+* 账号同步机制唤醒 AccountManager
