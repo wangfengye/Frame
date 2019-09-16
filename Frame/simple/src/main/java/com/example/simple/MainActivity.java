@@ -29,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
         //  testArrayMap();
         // testTouchEvent();
         //  testHandlerThread();
-        testVideo();
+        //testVideo();
+       // HandlerTest.test();
     }
 
     /**

@@ -18,4 +18,10 @@
         android:layout_margin="36dp"
         android:text="SHOW_VERSION"
         android:onClick="showVersion"/>
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="36dp"
+        android:text="SHOW_VERSION_FINAL"
+        android:onClick="showVersionFinal"/>
 </android.support.v7.widget.LinearLayoutCompat>

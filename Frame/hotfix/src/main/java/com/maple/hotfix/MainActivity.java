@@ -95,4 +95,10 @@ public class MainActivity extends AppCompatActivity {
     public void showVersion(View view) {
        new FixDemo().d(this);
     }
+    int i=0;
+    public void showVersionFinal(View view) {
+        i++;
+        FixDemo.DATA="static="+i;
+        Toast.makeText(this, FixDemo.DESC+FixDemo.getDesc(), Toast.LENGTH_SHORT).show();
+    }
 }
