@@ -120,3 +120,4 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 #### [JobScheduler解析](jobScheduler.md)
 #### [Handler机制](framework/handler.md)
 #### [启动页优化](splash.md)
+#### [Window加载流程源码解析](framework.md)
