@@ -104,11 +104,18 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 * 查看traces.txt(目录data/anr)中线程名,堆栈信息,线程专题,binder call等信息.(app anr,响应慢等时产生).
 * traceview,系统性能分析工具,定位耗时操作.
 * systrace - Android4.1新增的应用性能数据采样和分析工具
-
+## 源码分析
 #### [FrameWrok之App启动](framework/framework.md)
 #### [模板方法AsynTask解析](framework/asyntask.md)
 #### [观察者模式 ListView](framework/listview.md)
 #### [策略模式--ValueAnimator](framework/animator.md)
+#### [JobScheduler解析](jobScheduler.md)
+#### [Window加载流程源码解析](framework/window.md)
+#### [Binder](framework/binder.md)
+#### [Handler机制](framework/handler.md)
+#### TODO: View,EventBus,Launcher,系统服务(ServiceManager,ActivityManagerService),系统应用
+
+## 三方库分析
 #### [Htttp框架,下载等](otherPackage/http.md)
 #### [图片加载框架分析](otherPackage/imageLoader.md)
 #### [Rxjava1.0框架分析](Rxjava/readme.md)
@@ -117,7 +124,5 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 ## 性能优化
 #### [内存泄漏](oom.md)
 #### [电量监控](电量监控.md)
-#### [JobScheduler解析](jobScheduler.md)
-#### [Handler机制](framework/handler.md)
 #### [启动页优化](splash.md)
-#### [Window加载流程源码解析](framework.md)
+
