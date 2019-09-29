@@ -1,0 +1,12 @@
+# ninja log v5
+1	416	0	CMakeFiles/native-lib.dir/src/main/cpp/bzip/crctable.c.o	6be46d228df4106e
+12	597	0	CMakeFiles/native-lib.dir/src/main/cpp/bzip/blocksort.c.o	15d4825d966cdf50
+7	628	0	CMakeFiles/native-lib.dir/src/main/cpp/bsdiff.c.o	e838b8a668174114
+17	763	0	CMakeFiles/native-lib.dir/src/main/cpp/bzip/compress.c.o	c19b915e1f025b71
+24	825	0	CMakeFiles/native-lib.dir/src/main/cpp/bzip/decompress.c.o	e3dcbee19d033bc4
+628	997	0	CMakeFiles/native-lib.dir/src/main/cpp/bzip/randtable.c.o	2887375ae390ff85
+416	1001	0	CMakeFiles/native-lib.dir/src/main/cpp/bzip/bzlib.c.o	864d7d4e0ca1d960
+597	1034	0	CMakeFiles/native-lib.dir/src/main/cpp/bspatch.c.o	5743008d4e847e3c
+33	1151	0	CMakeFiles/native-lib.dir/src/main/cpp/native-lib.cpp.o	aa7b0683949158ef
+763	1169	0	CMakeFiles/native-lib.dir/src/main/cpp/bzip/huffman.c.o	86840845c1f5cd5d
+1169	1296	0	../../../../build/intermediates/cmake/debug/obj/armeabi-v7a/libnative-lib.so	2e7a78c601ed455e

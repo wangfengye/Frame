@@ -1,0 +1,15 @@
+Executable : E:\androidstudio\sdk\cmake\3.6.4111459\bin\cmake.exe
+arguments : 
+-HD:\wsandroid\FrameDemo\Bsdiff\app
+-BD:\wsandroid\FrameDemo\Bsdiff\app\.externalNativeBuild\cmake\release\armeabi-v7a
+-DANDROID_ABI=armeabi-v7a
+-DANDROID_PLATFORM=android-21
+-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=D:\wsandroid\FrameDemo\Bsdiff\app\build\intermediates\cmake\release\obj\armeabi-v7a
+-DCMAKE_BUILD_TYPE=Release
+-DANDROID_NDK=E:\androidstudio\sdk\ndk-bundle
+-DCMAKE_CXX_FLAGS=
+-DCMAKE_TOOLCHAIN_FILE=E:\androidstudio\sdk\ndk-bundle\build\cmake\android.toolchain.cmake
+-DCMAKE_MAKE_PROGRAM=E:\androidstudio\sdk\cmake\3.6.4111459\bin\ninja.exe
+-GAndroid Gradle - Ninja
+jvmArgs : 
+
