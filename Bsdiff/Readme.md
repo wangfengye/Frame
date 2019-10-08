@@ -1,6 +1,10 @@
 #### 增量更新
 >[Bsdiff下载地址](http://www.daemonology.net/bsdiff/)
 
+##### 差分原理
+* 以原包为基准,相同给定标记,不同部分压缩.
+* 重复内容越多,差分包越小.
+
 ##### 后端生成差分包(liunx服务器)
 > res下资源包,两个版本的apk(需要带签名的)
 
@@ -17,6 +21,12 @@
 ##### android 端使用(NDK)
 1. 编写JNI 代码 调用 `baspatch.c`的main函数合并包,(注意参数顺序)
 2. 完成后安装新包,设计的android7.0后的新权限,配置FileProvider
+
+##### java使用
+1. windows平台,将jni代码重新打包成dll动态库使用
+    * 注意需要使用windows下jdk总的jni.h
+2. windows平台,将jni代码重新打包成so动态库使用
+     * 注意需要使用linuxs下jdk总的jni.h
 
 #### 遇到问题
 * As升级3.4后编译失败,
