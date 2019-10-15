@@ -28,7 +28,8 @@ public class VideoPlayer {
 
     public static native void sound(String input, String output);
 
-    public AudioTrack createAudioTrack() {
+    public static AudioTrack createAudioTrack() {
+        // 写死的配置,可能导致部分配置不同的音频播放错乱
         int channelConfig = AudioFormat.CHANNEL_OUT_STEREO;
         int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
         int bufferSizeInBytes = AudioTrack.getMinBufferSize(44100, channelConfig, audioFormat);
@@ -39,4 +40,5 @@ public class VideoPlayer {
                 bufferSizeInBytes, AudioTrack.MODE_STREAM);
         return audioTrack;
     }
+
 }

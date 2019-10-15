@@ -41,3 +41,5 @@
             1. 下载源代码 ` git clone https://github.com/lemenkov/libyuv`
             2. 安装对应版本cmake: 下载包,解压,配置环境变量
             3. yuv目录下新建build,目录下执行 `cmake ..`, `make`.
+    4.音频解码播放
+ 
