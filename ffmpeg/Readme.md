@@ -36,8 +36,8 @@
 * android使用
     1. 开始使用api=29编译,运行提示 fread_unlock()找不到,需要minVersion>28才能跑.
     2. 视频解码,
-    3. 视频播放
-        * yuv->rgb库linux编译
+    3. 视频播放,使用ffmpeg的scale库做yuv->rgb的转换
+        * yuv->rgb库linux编译(暂时没成功呢)
             1. 下载源代码 ` git clone https://github.com/lemenkov/libyuv`
             2. 安装对应版本cmake: 下载包,解压,配置环境变量
             3. yuv目录下新建build,目录下执行 `cmake ..`, `make`.

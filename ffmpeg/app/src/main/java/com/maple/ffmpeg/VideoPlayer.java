@@ -1,12 +1,17 @@
 package com.maple.ffmpeg;
 
+import android.media.AudioFormat;
+import android.media.AudioManager;
+import android.media.AudioTrack;
 import android.view.Surface;
+
+import java.nio.Buffer;
 
 /**
  * Created by maple on 2019/10/11 15:15
  */
 public class VideoPlayer {
-    static{
+    static {
         System.loadLibrary("avutil");
         System.loadLibrary("swresample");
         System.loadLibrary("avcodec");
@@ -18,5 +23,20 @@ public class VideoPlayer {
         System.loadLibrary("yuv");
         System.loadLibrary("native-lib");
     }
+
     public static native void render(String input, Surface surface);
+
+    public static native void sound(String input, String output);
+
+    public AudioTrack createAudioTrack() {
+        int channelConfig = AudioFormat.CHANNEL_OUT_STEREO;
+        int audioFormat = AudioFormat.ENCODING_PCM_16BIT;
+        int bufferSizeInBytes = AudioTrack.getMinBufferSize(44100, channelConfig, audioFormat);
+        AudioTrack audioTrack = new AudioTrack(
+                AudioManager.STREAM_MUSIC,
+                44100, channelConfig,
+                AudioFormat.ENCODING_PCM_16BIT,
+                bufferSizeInBytes, AudioTrack.MODE_STREAM);
+        return audioTrack;
+    }
 }

@@ -42,6 +42,14 @@ public class MainActivity extends AppCompatActivity {
                 play();
             }
         });
+        findViewById(R.id.btn_sound).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String videoPath=new File(Environment.getExternalStorageDirectory(), "b.mp3").getAbsolutePath();
+                String out=new File(Environment.getExternalStorageDirectory(), "qwww.pcm").getAbsolutePath();
+                VideoPlayer.sound(videoPath,out);
+            }
+        });
     }
 
     private void testDecode() {
@@ -52,9 +60,15 @@ public class MainActivity extends AppCompatActivity {
     }
     private void play(){
         VideoView videoView = findViewById(R.id.vv);
-        String videoPath=new File(Environment.getExternalStorageDirectory(), "natural.mp4").getAbsolutePath();
-        Surface surface =videoView.getHolder().getSurface();
-        VideoPlayer.render(videoPath,surface);
+        final String videoPath=new File(Environment.getExternalStorageDirectory(), "natural.mp4").getAbsolutePath();
+        final Surface surface =videoView.getHolder().getSurface();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                VideoPlayer.render(videoPath,surface);
+            }
+        }).start();
+
     }
 
 }

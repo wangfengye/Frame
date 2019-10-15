@@ -14,12 +14,15 @@ extern "C" {
 #include "libavformat/avformat.h"
 
 #include "libswscale/swscale.h"
+#include "libswresample/swresample.h"
+#include "libavutil/frame.h"
+#include "libavutil/mem.h"
 
 }
 
 #define LOGI(FORMAT, ...) __android_log_print(ANDROID_LOG_INFO,"native",FORMAT,##__VA_ARGS__);
 #define LOGE(FORMAT, ...) __android_log_print(ANDROID_LOG_ERROR,"native",FORMAT,##__VA_ARGS__);
-
+#define MAX_AUDIO_FRME_SIZE 48000 * 4
 extern "C"
 JNIEXPORT void JNICALL
 Java_com_maple_ffmpeg_VideoUtil_decode(JNIEnv *env, jclass type, jstring in_, jstring out_) {
@@ -134,101 +137,152 @@ Java_com_maple_ffmpeg_VideoUtil_decode(JNIEnv *env, jclass type, jstring in_, js
     fclose(fp_yuv);
     env->ReleaseStringUTFChars(in_, in);
     env->ReleaseStringUTFChars(out_, out);
-}extern "C"
+}
+
+extern "C"
 JNIEXPORT void JNICALL
 Java_com_maple_ffmpeg_VideoPlayer_render(JNIEnv *env, jclass type, jstring input_,
                                          jobject surface) {
     const char *input = env->GetStringUTFChars(input_, 0);
-    // 注册全部组件
-    avcodec_register_all();
-    AVFormatContext *pFormatCtx = avformat_alloc_context();
-    //打开输入视频文件
-    if (avformat_open_input(&pFormatCtx, input, nullptr, nullptr) != 0) {
-        LOGE("%s", "无法打开视频");
+    av_register_all();
+    LOGE("注册成功")
+    AVFormatContext *avFormatContext = avformat_alloc_context();//获取上下文
+    int error;
+    char buf[] = "";
+    //打开视频地址并获取里面的内容(解封装)
+    if (error = avformat_open_input(&avFormatContext, input, NULL, NULL) < 0) {
+        av_strerror(error, buf, 1024);
+        // LOGE("%s" ,inputPath)
+        LOGE("Couldn't open file %s: %d(%s)", input, error, buf);
+        // LOGE("%d",error)
+        LOGE("打开视频失败")
         return;
     }
-    if (avformat_find_stream_info(pFormatCtx, nullptr) < 0) {
-        LOGE("%s", "视频信息获取失败");
+    if (avformat_find_stream_info(avFormatContext, NULL) < 0) {
+        LOGE("获取内容失败")
         return;
     }
-    int v_stream_idx = -1;
-    int i = 0;
-    // 遍历所有流,找出视频流(其他,字幕,音频等)
-    for (; i < pFormatCtx->nb_streams; i++) {
-        if (pFormatCtx->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
-            v_stream_idx = i;
-            break;
+    //获取到整个内容过后找到里面的视频流
+    int video_index = -1;
+    for (int i = 0; i < avFormatContext->nb_streams; ++i) {
+        if (avFormatContext->streams[i]->codec->codec_type == AVMEDIA_TYPE_VIDEO) {
+            //如果是视频流,标记一哈
+            video_index = i;
         }
     }
-    if (v_stream_idx == -1) {
-        LOGE("%s", "找不到视频流");
+    LOGE("成功找到视频流")
+    //对视频流进行解码
+    //获取解码器上下文
+    AVCodecContext *avCodecContext = avFormatContext->streams[video_index]->codec;
+    //获取解码器
+    AVCodec *avCodec = avcodec_find_decoder(avCodecContext->codec_id);
+    //打开解码器
+    if (avcodec_open2(avCodecContext, avCodec, NULL) < 0) {
+        LOGE("打开失败")
         return;
     }
-    AVCodecContext *pCodeCtx = pFormatCtx->streams[v_stream_idx]->codec;
-    AVCodec *pCodec = avcodec_find_decoder(pCodeCtx->codec_id);
-    if (pCodec == NULL) {
-        LOGE("%s", "找不到解码器");
-        return;
-    }
-    if (avcodec_open2(pCodeCtx, pCodec, nullptr) < 0) {
-        LOGE("%s", "打不开解码器");
-        return;
-    }
-    LOGI("文件格式: %s", pFormatCtx->iformat->name);
-    long time = -1;
-    AVStream *avStream = pFormatCtx->streams[v_stream_idx];
-    int den = avStream->time_base.den;
-    int num = avStream->time_base.num;
 
-    time = (long) (avStream->duration * (num * 1.0 / den));
-    LOGI("视频时长：%ld s",pFormatCtx->duration/1000);
-    LOGI("视频的宽高：%d,%d", pCodeCtx->width, pCodeCtx->height);
-    LOGI("解码器的名称：%s", pCodec->name);
-    // 开辟缓冲区
-    AVPacket *packet = static_cast<AVPacket *>(av_malloc(sizeof(AVPacket)));
-    //帧数据
-    AVFrame *yuv_frame = av_frame_alloc();
-    AVFrame *rgb_frame = av_frame_alloc();
+    //申请AVPacket
+    AVPacket *packet = (AVPacket *) av_malloc(sizeof(AVPacket));
+    av_init_packet(packet);
+    //申请AVFrame
+    AVFrame *frame = av_frame_alloc();//分配一个AVFrame结构体,AVFrame结构体一般用于存储原始数据，指向解码后的原始帧
+    AVFrame *rgb_frame = av_frame_alloc();//分配一个AVFrame结构体，指向存放转换成rgb后的帧
+    //输出文件
+    //FILE *fp = fopen(outputPath,"wb");
+
+
+    //缓存区
+
+    //与缓存区相关联，设置rgb_frame缓存区
+
+
+
+    SwsContext *swsContext= nullptr;
+
+    //取到nativewindow
     ANativeWindow *nativeWindow = ANativeWindow_fromSurface(env, surface);
-    ANativeWindow_Buffer outBuffer;
-    int len, got_frame, framecount = 0;
-    int w = pCodeCtx->width ;
-    int h = pCodeCtx->height ;
 
-    while (av_read_frame(pFormatCtx, packet) >= 0) {
-        len = avcodec_decode_video2(pCodeCtx, yuv_frame, &got_frame, packet);
-        if (got_frame) {
-            LOGI("解码%d帧",framecount++);
-            ANativeWindow_setBuffersGeometry(nativeWindow, w, h,
-                                             WINDOW_FORMAT_RGBA_8888);
-            ANativeWindow_lock(nativeWindow, &outBuffer, NULL);
-            avpicture_fill((AVPicture *)rgb_frame, static_cast<const uint8_t *>(outBuffer.bits), AV_PIX_FMT_RGBA, pCodeCtx->width, pCodeCtx->height);
-//            av_image_fill_arrays(rgb_frame->data, rgb_frame->linesize,
-//                                 static_cast<const uint8_t *>(outBuffer.bits), pCodeCtx->pix_fmt, w, h, 0);
-            //缩放数据
-/*            libyuv::I420Scale(yuv_frame->data[0], yuv_frame->linesize[0],
-                              yuv_frame->data[2], yuv_frame->linesize[2],
-                              yuv_frame->data[1], yuv_frame->linesize[1],
-                              pCodeCtx->width, pCodeCtx->height,
-                              yuv_frame_sc->data[0],w,
-                              yuv_frame_sc->data[2],w>>1,
-                              yuv_frame_sc->data[1], w>>1,
-                              w, h,
-                              (libyuv::FilterMode) 0);*/
-            //yuv0->RGBA_8888
-            libyuv::I420ToARGB(yuv_frame->data[0], yuv_frame->linesize[0],
-                               yuv_frame->data[2], yuv_frame->linesize[2],
-                               yuv_frame->data[1], yuv_frame->linesize[1],
-                               rgb_frame->data[0], rgb_frame->linesize[0],
-                               w, h);
-            ANativeWindow_unlockAndPost(nativeWindow);
-            usleep(1000 * 16);
+    if (nativeWindow == 0) {
+        LOGE("nativewindow取到失败")
+        return;
+    }
+    //视频缓冲区
+    ANativeWindow_Buffer native_outBuffer;
+
+
+    int dw=0;int dh=0;
+    int frameCount;
+    int h = 0;
+    LOGE("解码 ")
+    while (av_read_frame(avFormatContext, packet) >= 0) {
+        LOGE("解码 %d", packet->stream_index)
+        LOGE("VINDEX %d", video_index)
+        if (packet->stream_index == video_index) {
+            LOGE("解码 hhhhh")
+            //如果是视频流
+            //解码
+            avcodec_decode_video2(avCodecContext, frame, &frameCount, packet);
+            LOGE("解码中....  %d", frameCount)
+            if (frameCount) {
+                LOGE("转换并绘制")
+                //说明有内容
+                //绘制之前配置nativewindow
+                ANativeWindow_setBuffersGeometry(nativeWindow, avCodecContext->width,
+                                                 avCodecContext->height, WINDOW_FORMAT_RGBA_8888);
+                //上锁
+                ANativeWindow_lock(nativeWindow, &native_outBuffer, NULL);
+                if (swsContext==NULL){
+                    LOGI("avCodecContext: %d,%d",avCodecContext->width,avCodecContext->height);
+                    LOGI("native_outBuffer: %d,%d",native_outBuffer.width,native_outBuffer.height);
+                    dw=native_outBuffer.width;
+                    dh= dw*avCodecContext->height/avCodecContext->width;
+                    swsContext = sws_getContext(avCodecContext->width, avCodecContext->height,
+                                     avCodecContext->pix_fmt,
+                                     dw, dh,
+                                     AV_PIX_FMT_RGBA,
+                                     SWS_BICUBIC, NULL, NULL, NULL);
+                    uint8_t *out_buffer = (uint8_t *) av_malloc(avpicture_get_size(AV_PIX_FMT_RGBA,
+                                                                                   dw,
+                                                                                  dh));
+                    avpicture_fill((AVPicture *) rgb_frame, out_buffer, AV_PIX_FMT_RGBA, dw,
+                                  dh);
+                }
+
+                //转换为rgb格式
+                sws_scale(swsContext, (const uint8_t *const *) frame->data, frame->linesize, 0,
+                          frame->height, rgb_frame->data,
+                          rgb_frame->linesize);
+                //  rgb_frame是有画面数据
+                uint8_t *dst = (uint8_t *) native_outBuffer.bits;
+//            拿到一行有多少个字节 RGBA
+                int destStride = native_outBuffer.stride * 4;
+                //像素数据的首地址
+                uint8_t *src = rgb_frame->data[0];
+//            实际内存一行数量
+                int srcStride = rgb_frame->linesize[0];
+                //int i=0;
+                for (int i = 0; i < dh; ++i) {
+//                memcpy(void *dest, const void *src, size_t n)
+                    //将rgb_frame中每一行的数据复制给nativewindow
+                    memcpy(dst + i * destStride, src + i * srcStride, srcStride);
+                }
+//解锁
+                ANativeWindow_unlockAndPost(nativeWindow);
+                usleep(1000 * 16);
+
+            }
         }
         av_free_packet(packet);
     }
+    //释放
     ANativeWindow_release(nativeWindow);
-    av_frame_free(&yuv_frame);
-    avcodec_close(pCodeCtx);
-    avformat_free_context(pFormatCtx);
+    av_frame_free(&frame);
+    av_frame_free(&rgb_frame);
+    avcodec_close(avCodecContext);
+    avformat_free_context(avFormatContext);
+
     env->ReleaseStringUTFChars(input_, input);
 }
+
+
