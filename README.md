@@ -129,4 +129,7 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 ### [文件拆分合并](ndk/Readme.md)
 ### [FMOD音效使用](VoiceChange/Readme.md)
 ### [FFmpeg](ffmpeg/Readme.md)
+## Linux
+### [linux命令](linuxBase/linux_cmd.md)
+### [shell基础](linuxBase/shell_demo.sh)
 
