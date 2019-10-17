@@ -132,4 +132,5 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 ## Linux
 ### [linux命令](linuxBase/linux_cmd.md)
 ### [shell基础](linuxBase/shell_demo.sh)
+### [Makefile](linuxBase/makefile.md)
 

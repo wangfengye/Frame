@@ -1,0 +1,28 @@
+# 另一种编译方式
+# 自动化变量 $^所有依赖 $@目标
+ SOUR=$(wildcard *.c) # 所有.c源文件
+ a=$(patsubst %.c,%.o,$(SOUR)) # 替换.c后缀为.o后缀
+OBJECTS=main.o plus.o minus.o multi.o divi.o
+myapp:$(OBJECTS)
+	gcc $^ -o $@
+#通配符
+%.o:%.c
+	gcc -c $^
+
+# 递归展开
+# 引用时展开
+str1 = $(str2)
+str2 = str1
+# 定义时展开
+str3 :=android
+str4 := $(str3)
+# 变量追加
+str1 +=after
+str3 +=after
+# 测试变量值
+test:
+	echo $(SOUR)
+	echo $(a)
+	echo $(str1)
+	echo $(str4)
+	echo $(str3)

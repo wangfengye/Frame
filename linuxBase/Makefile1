@@ -1,0 +1,18 @@
+myapp: main.o divi.o minus.o multi.o plus.o
+	gcc main.o divi.o minus.o multi.o plus.o -o myapp
+main.o: main.c
+	gcc -c main.c
+divi.o: divi.c
+	gcc -c divi.c
+minus.o: minus.c
+	gcc -c minus.c
+multi.o: multi.c
+	gcc -c multi.c
+plus.o: plus.c
+	gcc -c plus.c
+# 清理编译产生的文件,需用make clean调用,同时同级目录下不能有clean名的文件
+# 伪目标,不再把clean误认为文件名.
+.PHONY:clean
+clean:
+	rm -rf *.o
+	rm  myapp
