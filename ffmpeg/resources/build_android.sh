@@ -1,12 +1,15 @@
 ﻿#!/bin/bash
 make clean
+# export 全局变量,声明后可在多个脚本中使用.
 export NDK=/maple/android-ndk-r20
 TOOLCHAIN=$NDK/toolchains/llvm/prebuilt/linux-x86_64/
 API=29
 function build_android
 {
+# `\` 用于将一行命令分割为多行,对空格敏感
 echo "Compiling FFmpeg for $CPU"
 ./configure \
+	# 生成so的目录
     --prefix=$PREFIX \
     --disable-neon \
     --disable-hwaccels \
@@ -58,6 +61,7 @@ CPU=armv7-a
 CC=$TOOLCHAIN/bin/armv7a-linux-androideabi$API-clang
 CXX=$TOOLCHAIN/bin/armv7a-linux-androideabi$API-clang++
 SYSROOT=$NDK/toolchains/llvm/prebuilt/linux-x86_64/sysroot
+#最终命令前缀
 CROSS_PREFIX=$TOOLCHAIN/bin/arm-linux-androideabi-
 PREFIX=$(pwd)/android/$CPU
 OPTIMIZE_CFLAGS="-mfloat-abi=softfp -mfpu=vfp -marm -march=$CPU "
