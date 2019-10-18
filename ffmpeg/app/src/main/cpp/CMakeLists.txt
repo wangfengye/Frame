@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.4.1)
 include_directories(${CMAKE_SOURCE_DIR}/include)#头文件目录
 
 
-add_library(native-lib SHARED native-lib.cpp audio_play.c)
+add_library(native-lib SHARED native-lib.cpp audio_play.c n_thread.cpp)
 
 
 find_library(  log-lib log )
