@@ -2,6 +2,8 @@ package com.maple.ffmpeg;
 
 import org.junit.Test;
 
+import java.util.UUID;
+
 import static org.junit.Assert.*;
 
 /**
@@ -12,6 +14,9 @@ import static org.junit.Assert.*;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() {
+        System.out.println(
+             UUID.randomUUID().toString()
+        );
         assertEquals(4, 2 + 2);
     }
 }
