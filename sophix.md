@@ -19,6 +19,10 @@
 * 打Dex包
 	1. 进入build-tools/任意版本/
 	2. dx --dex --output [输出路径(包含生成的文件名:a.dex)] [class文件路径(需要包含包路径即: 类路径E:\tmp\com\maple\s\a.class,填写E:\tmp\)]
+* 指定替换函数的方式
+	* 注解
+	* 额外的配置文件.
+	* 两者结合,配置文件指定类,减少类遍历时耗,注解用于更新方法时方便获取替换的函数名及类名
 	
 	
 #### 异常
@@ -30,3 +34,5 @@
 > 数组下标越界,修复后,调用修复接口出现
 
 * `dex_cache_resolved_methods_`dex_cache_resolved_types_`这两个变量超出int32限制
+
+* 旧版davlik虚拟机中ANDFIx获取class对象,并修改类状态为已准备, 我们写的版本中不需要这一步.

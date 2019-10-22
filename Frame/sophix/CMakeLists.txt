@@ -10,6 +10,7 @@ add_library(
 
              src/main/jni/mainactivity.cpp
              src/main/jni/art_method.h
+             src/main/jni/dalvik.h
              )
 
 

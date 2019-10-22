@@ -1,6 +1,5 @@
 package com.maple.sophix;
 
-import com.maple.sophix.util.Replace;
 
 /**
  * @author maple on 2019/7/8 11:19.
@@ -8,8 +7,8 @@ import com.maple.sophix.util.Replace;
  * @see 1040441325@qq.com
  */
 public class Test {
-
+    //@Replace(clazz = "com.maple.sophix.Test", method = "mirror")
     public String mirror() {
-        return "异常程序";
+        return "程序异常";
     }
 }

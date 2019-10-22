@@ -52,7 +52,7 @@ Java_com_maple_ffmpeg_NativeThreadUtil_thread(JNIEnv *env, jobject instance) {
     //获取方式2
     JavaVM *vm;
     env->GetJavaVM(&vm);
-    
+
     pthread_t tid;
     pthread_create(&tid, nullptr, th_fun, (void *) "sub thread");
     pthread_join(tid, nullptr);
