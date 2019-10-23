@@ -42,3 +42,21 @@
             2. 安装对应版本cmake: 下载包,解压,配置环境变量
             3. yuv目录下新建build,目录下执行 `cmake ..`, `make`.
     4.音频解码播放
+* JNI 异常处理
+    1. 查看异常,部分错误日志不在本项目下需要切换到`No Filters`中查找,找到backtrace中首个异常地址,即出现异常最开始的地方.
+    异常地址可使用步骤3反查.
+    2. 使用ndk-stack(ndk包中)分析地址(可以跳过这步)
+        ```
+        adb logcat | ndk-stack -sym [so目录]
+        ```
+    3. 使用addr2line(ndk包中)e分析异常出现的位置
+        ```
+        arm-linux-androideabi-addr2line -e [so文件] [异常地址]
+        ```
+## OpenSL ES（Open Sound Library embedded system）
+
+## 常见问题
+* jni获取自定义的java类,需要在主线程执行.子线程需要反射时,一般先在主线程获取,设为全局引用,供子线程使用.
+* 视频花屏
+    1. Surface不支持(极小概率)
+    2. 解码出的视频格式非yuv.

@@ -4,6 +4,7 @@
 #include <android/native_window_jni.h>
 #include <android/native_window.h>
 #include <unistd.h>
+#include <>
 
 
 #include "libyuv.h"
@@ -255,19 +256,19 @@ Java_com_maple_ffmpeg_VideoPlayer_render(JNIEnv *env, jclass type, jstring input
                           rgb_frame->linesize);
                 //  rgb_frame是有画面数据
                 uint8_t *dst = (uint8_t *) native_outBuffer.bits;
-//            拿到一行有多少个字节 RGBA
+                //拿到一行有多少个字节 RGBA
                 int destStride = native_outBuffer.stride * 4;
                 //像素数据的首地址
                 uint8_t *src = rgb_frame->data[0];
-//            实际内存一行数量
+                //  实际内存一行数量
                 int srcStride = rgb_frame->linesize[0];
                 //int i=0;
                 for (int i = 0; i < dh; ++i) {
-//                memcpy(void *dest, const void *src, size_t n)
+                // memcpy(void *dest, const void *src, size_t n)
                     //将rgb_frame中每一行的数据复制给nativewindow
                     memcpy(dst + i * destStride, src + i * srcStride, srcStride);
                 }
-//解锁
+            //解锁
                 ANativeWindow_unlockAndPost(nativeWindow);
                 usleep(1000 * 16);
 

@@ -22,7 +22,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         Button tv = findViewById(R.id.sample_text);
         tv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_thread).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                new NativeThreadUtil().thread();
+              new NativeThreadUtil().thread();
             }
         });
     }
@@ -75,12 +74,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void play() {
         VideoView videoView = findViewById(R.id.vv);
-        final String videoPath = new File(Environment.getExternalStorageDirectory(), "natural.mp4").getAbsolutePath();
+        final String videoPath = new File(Environment.getExternalStorageDirectory(), "a.mp4").getAbsolutePath();
         final Surface surface = videoView.getHolder().getSurface();
+
         new Thread(new Runnable() {
             @Override
             public void run() {
-                VideoPlayer.render(videoPath, surface);
+              //  VideoPlayer.render(videoPath, surface);
+                VideoPlayer.play(videoPath,surface);
             }
         }).start();
 
