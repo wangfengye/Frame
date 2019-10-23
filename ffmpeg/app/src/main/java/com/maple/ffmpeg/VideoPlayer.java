@@ -28,6 +28,7 @@ public class VideoPlayer {
     public static native void render(String input, Surface surface);
 
     public static native void sound(String input, String output);
+    public static native void soundwavOnOpenSL(String input);
     public static native void play(String input,  Surface surface);
 
     public static AudioTrack createAudioTrack() {

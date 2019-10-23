@@ -4,7 +4,6 @@
 #include <android/native_window_jni.h>
 #include <android/native_window.h>
 #include <unistd.h>
-#include <>
 
 
 #include "libyuv.h"
@@ -268,7 +267,7 @@ Java_com_maple_ffmpeg_VideoPlayer_render(JNIEnv *env, jclass type, jstring input
                     //将rgb_frame中每一行的数据复制给nativewindow
                     memcpy(dst + i * destStride, src + i * srcStride, srcStride);
                 }
-            //解锁
+//解锁
                 ANativeWindow_unlockAndPost(nativeWindow);
                 usleep(1000 * 16);
 

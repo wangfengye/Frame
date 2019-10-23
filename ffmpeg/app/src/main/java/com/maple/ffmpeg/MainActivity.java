@@ -13,7 +13,12 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,13 +49,14 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_sound).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String videoPath = new File(Environment.getExternalStorageDirectory(), "natural.mp4").getAbsolutePath();
+                final String videoPath = new File(Environment.getExternalStorageDirectory(), "test.wav").getAbsolutePath();
                 final String out = new File(Environment.getExternalStorageDirectory(), "qwww.pcm").getAbsolutePath();
                 new Thread(
                         new Runnable() {
                             @Override
                             public void run() {
                                 VideoPlayer.sound(videoPath, out);
+                                VideoPlayer.soundwavOnOpenSL(videoPath);
                             }
                         }
                 ).start();
@@ -60,7 +66,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_thread).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-              new NativeThreadUtil().thread();
+                 new NativeThreadUtil().thread();
+
             }
         });
     }
@@ -80,11 +87,12 @@ public class MainActivity extends AppCompatActivity {
         new Thread(new Runnable() {
             @Override
             public void run() {
-              //  VideoPlayer.render(videoPath, surface);
-                VideoPlayer.play(videoPath,surface);
+                //  VideoPlayer.render(videoPath, surface);
+                VideoPlayer.play(videoPath, surface);
             }
         }).start();
 
     }
+
 
 }
