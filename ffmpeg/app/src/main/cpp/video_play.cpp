@@ -9,9 +9,12 @@
 #include <android/native_window.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <sys/prctl.h>
 
-#include "libyuv.h"
-// open sl
+#include <queue>
+
+using namespace std;
+
 
 
 
@@ -22,7 +25,7 @@ extern "C" {
 #include "libswresample/swresample.h"
 #include "libavutil/frame.h"
 #include "libavutil/mem.h"
-
+#include "libyuv.h"
 }
 
 #define LOGI(FORMAT, ...) __android_log_print(ANDROID_LOG_INFO,"native",FORMAT,##__VA_ARGS__);
@@ -31,9 +34,16 @@ extern "C" {
 //预留视频,音频,字幕,三个流的上下文位置
 constexpr int MAX_STREAM = 3;
 constexpr int MAX_AUDIO_FRME_SIZE = 48000 * 4;
+constexpr long SLEEPING = 1000 * 16;
 
 
 extern "C" {
+queue<AVPacket *> video_frames;
+queue<AVPacket *> audio_frames;
+pthread_mutex_t video_mutex;
+bool NeedSleep = false;//解码一帧是是否延时
+
+
 typedef struct Player {
     JavaVM *javaVM;
     // 上下文
@@ -116,10 +126,10 @@ void init_codec_context(struct Player *player, int stream_idx) {
         LOGE("%s", "解码器无法打开");
         return;
     }
-
+    LOGI("视频格式%s",codec->name);
     player->input_codec_ctx[stream_idx] = codec_ctx;
 }
-void decode_videoFrame(Player *player, AVPacket *packet) {
+void decode_video_frame(Player *player, AVPacket *packet) {
     AVFrame *yuv_frame = av_frame_alloc();
     AVFrame *rgb_frame = av_frame_alloc();
     //绘制时的缓冲区
@@ -148,34 +158,31 @@ void decode_videoFrame(Player *player, AVPacket *packet) {
         avpicture_fill((AVPicture *) rgb_frame, (const uint8_t *) outBuffer.bits, AV_PIX_FMT_RGBA,
                        codec_ctx->width, codec_ctx->height);
         //YUV->RGBA_8888
+
         libyuv::I420ToARGB(yuv_frame->data[0], yuv_frame->linesize[0],
                            yuv_frame->data[2], yuv_frame->linesize[2],
                            yuv_frame->data[1], yuv_frame->linesize[1],
                            rgb_frame->data[0], rgb_frame->linesize[0],
                            codec_ctx->width, codec_ctx->height);
-
-        //unlock
         ANativeWindow_unlockAndPost(player->nativeWindow);
+        usleep(SLEEPING);
 
-        usleep(1000 * 16);
     }
     av_frame_free(&yuv_frame);
     av_frame_free(&rgb_frame);
 }
 void *decode_video(void *arg) {
+    prctl(PR_SET_NAME, "decode_video_thread");
     Player *player = (Player *) arg;
     AVFormatContext *format_ctx = player->input_format_ctx;
-
     AVPacket *packet = (AVPacket *) av_malloc(sizeof(AVPacket));
-    int video_frame_count = 0;
     while (av_read_frame(format_ctx, packet) >= 0) {
         if (packet->stream_index == player->video_stream_index) {
-            LOGI("video_frame_count:%d", video_frame_count++);
-            decode_videoFrame(player, packet);
-
+            decode_video_frame(player, packet);
         }
         av_free_packet(packet);
     }
+    return nullptr;
 }
 void jni_audio_prepare(JNIEnv *env, jclass player_class, struct Player *player) {
     //JNI begin------------------
@@ -205,7 +212,7 @@ void jni_audio_prepare(JNIEnv *env, jclass player_class, struct Player *player) 
 void decode_video_prepare(Player *player, JNIEnv *env, jobject surface) {
     player->nativeWindow = ANativeWindow_fromSurface(env, surface);
 }
-void decode_audio(struct Player *player, AVPacket *packet) {
+void decode_audio_frame(Player *player, AVPacket *packet) {
     AVCodecContext *codec_ctx = player->input_codec_ctx[player->audio_stream_index];
     LOGI("%s", "decode_audio");
     //解压缩数据
@@ -231,7 +238,7 @@ void decode_audio(struct Player *player, AVPacket *packet) {
 
         //out_buffer缓冲区数据，转成byte数组
         jbyteArray audio_sample_array = env->NewByteArray(out_buffer_size);
-        jbyte *sample_bytep = env->GetByteArrayElements(audio_sample_array, NULL);
+        jbyte *sample_bytep = env->GetByteArrayElements(audio_sample_array, nullptr);
         //out_buffer的数据复制到sampe_bytep
         memcpy(sample_bytep, out_buffer, out_buffer_size);
         //同步
@@ -244,8 +251,7 @@ void decode_audio(struct Player *player, AVPacket *packet) {
         env->DeleteLocalRef(audio_sample_array);
 
         javaVM->DetachCurrentThread();
-
-        usleep(1000 * 16);
+        if (NeedSleep)usleep(SLEEPING);
     }
 
     av_frame_free(&frame);
@@ -255,22 +261,51 @@ void decode_audio(struct Player *player, AVPacket *packet) {
 /**
  * 解码子线程函数
  */
-void *decode_data(void *arg) {
-    struct Player *player = (struct Player *) arg;
+void *decode_audio(void *arg) {
+    prctl(PR_SET_NAME, "decode_audio_thread");
+    auto *player = (Player *) arg;
     AVFormatContext *format_ctx = player->input_format_ctx;
     //编码数据
-    AVPacket *packet = (AVPacket *) av_malloc(sizeof(AVPacket));
-    //6.一阵一阵读取压缩的视频数据AVPacket
-    int video_frame_count = 0;
+    auto *packet = (AVPacket *) av_malloc(sizeof(AVPacket));
+    //6.逐帧读取压缩的视频数据AVPacket
+
     while (av_read_frame(format_ctx, packet) >= 0) {
-        if (packet->stream_index == player->video_stream_index) {
-            //decode_video(player,packet);
-            //LOGI("video_frame_count:%d",video_frame_count++);
-        } else if (packet->stream_index == player->audio_stream_index) {
-            decode_audio(player, packet);
+        if (packet->stream_index == player->audio_stream_index) {
+            decode_audio_frame(player, packet);
+
         }
-        av_free_packet(packet);
+        //    av_free_packet(packet);
     }
+    return nullptr;
+}
+void *decode_data(void *arg) {
+    prctl(PR_SET_NAME, "decode_data");
+    auto *player = (Player *) arg;
+    AVFormatContext *format_ctx = player->input_format_ctx;
+    for (;;) {
+        auto *packet = (AVPacket *) av_malloc(sizeof(AVPacket));
+        if (av_read_frame(player->input_format_ctx, packet) < 0) {
+            av_packet_free(&packet);
+            break;
+        }
+        if (packet->stream_index == player->audio_stream_index) {
+            // decode_audio(player, packet);
+
+            audio_frames.push(packet);
+            LOGI("videoFrameCache: %d", audio_frames.size());
+
+        } else if (packet->stream_index == player->video_stream_index) {
+
+            video_frames.push(packet);
+            LOGI("videoFrameCache: %d", video_frames.size());
+
+        }
+
+        if (video_frames.size() > 100) {
+            usleep(1000 * 16);
+        }
+    }
+    return nullptr;
 }
 
 void decode_audio_prepare(Player *player) {
@@ -297,7 +332,7 @@ void decode_audio_prepare(Player *player) {
     swr_alloc_set_opts(swr_ctx,
                        out_ch_layout, out_sample_fmt, out_sample_rate,
                        in_ch_layout, in_sample_fmt, in_sample_rate,
-                       0, NULL);
+                       0, nullptr);
     swr_init(swr_ctx);
 
     //输出的声道个数
@@ -312,6 +347,55 @@ void decode_audio_prepare(Player *player) {
     player->out_channel_nb = out_channel_nb;
     player->swr_ctx = swr_ctx;
 } ;
+void *sync_play_video(void *arg) {
+    prctl(PR_SET_NAME, "sync_video");
+    auto *player = (Player *) arg;
+    usleep(SLEEPING);
+
+    for (;;) {
+
+        if (video_frames.empty()) {
+            LOGI("Video播放终止: %d", video_frames.size());
+            usleep(SLEEPING);
+            break;
+        }
+        AVPacket *video_packet = video_frames.front();
+        video_frames.pop();
+        decode_video_frame(player, video_packet);
+        av_packet_free(&video_packet);
+
+        usleep(SLEEPING);
+    }
+    return nullptr;
+}
+void *sync_play_audio(void *arg) {
+    prctl(PR_SET_NAME, "sync_audio");
+    auto *player = (Player *) arg;
+    usleep(SLEEPING);
+    int retry = 3;
+    for (;;) {
+
+        if (audio_frames.empty()) {
+            LOGI("AUDIO播放终止: %d,%d", video_frames.size(), audio_frames.size());
+            pthread_mutex_unlock(&video_mutex);
+            if (retry > 0) {
+                retry--;
+                usleep(SLEEPING);
+                continue;
+            } else {
+                break;
+            }
+        }
+        retry=3;
+        AVPacket *audio_packet = audio_frames.front();
+        audio_frames.pop();
+        decode_audio_frame(player, audio_packet);
+        av_packet_free(&audio_packet);
+
+        usleep(SLEEPING);
+    }
+    return nullptr;
+}
 JNIEXPORT void JNICALL
 Java_com_maple_ffmpeg_VideoPlayer_play(JNIEnv *env, jclass type, jstring input_, jobject surface) {
     const char *input = env->GetStringUTFChars(input_, nullptr);
@@ -327,14 +411,23 @@ Java_com_maple_ffmpeg_VideoPlayer_play(JNIEnv *env, jclass type, jstring input_,
     decode_audio_prepare(player);
     jni_audio_prepare(env, type, player);
     //子线程解码
+    //两个线程分别解码
 
-    pthread_create(&(player->decode_threads[player->video_stream_index]), nullptr, decode_video,
+
+    // 同步
+    pthread_mutex_init(&video_mutex, nullptr);
+    pthread_t decodetid;
+
+    pthread_create(&decodetid, nullptr, decode_data, player);
+    pthread_create(&(player->decode_threads[player->video_stream_index]), nullptr, sync_play_video,
                    player);
-    pthread_create(&(player->decode_threads[player->audio_stream_index]), nullptr, decode_data,
+    pthread_create(&(player->decode_threads[player->audio_stream_index]), nullptr, sync_play_audio,
                    player);
+
+    pthread_join(decodetid, nullptr);
     pthread_join(player->decode_threads[player->video_stream_index], nullptr);
-    int i;
-
+    pthread_join(player->decode_threads[player->audio_stream_index], nullptr);
+    pthread_mutex_destroy(&video_mutex);
     env->ReleaseStringUTFChars(input_, input);
 }
 

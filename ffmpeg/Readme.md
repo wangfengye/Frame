@@ -37,10 +37,13 @@
     1. 开始使用api=29编译,运行提示 fread_unlock()找不到,需要minVersion>28才能跑.
     2. 视频解码,
     3. 视频播放,使用ffmpeg的scale库做yuv->rgb的转换
-        * yuv->rgb库linux编译(暂时没成功呢)
+        * yuv->rgb库linux编译
             1. 下载源代码 ` git clone https://github.com/lemenkov/libyuv`
             2. 安装对应版本cmake: 下载包,解压,配置环境变量
-            3. yuv目录下新建build,目录下执行 `cmake ..`, `make`.
+            3. 修改[CMakeList文件](./resources/CMakeLists.txt),支持我么需要的cpu架构.
+            4. yuv目录下新建build,目录下执行 `cmake ..`, `make`.
+            5. app引入,导入so,头文件,
+            6. app默认使用最小的c++支持库,而so中使用了其他基础库,需要指定[支持库](https://developer.android.com/ndk/guides/cmake.html#variables),gradle配置`arguments "-DANDROID_STL=c++_shared"`
     4.音频解码播放
 * JNI 异常处理
     1. 查看异常,部分错误日志不在本项目下需要切换到`No Filters`中查找,找到backtrace中首个异常地址,即出现异常最开始的地方.
@@ -70,6 +73,9 @@
     10. 主动调用一次回调函数,插入一块数据,开始播放,
     11. 回调中判断无数据可读即停止播放,关闭文件.
     12. 其中开关文件,读取文件使用wavlib库函数,
+## 音视频同步
+> 需要三个线程,两个队列 ,一个线程解析数据,插入两个队列,两个线程分别播放视频
+
 ## 常见问题
 * jni获取自定义的java类,需要在主线程执行.子线程需要反射时,一般先在主线程获取,设为全局引用,供子线程使用.
 * 视频花屏

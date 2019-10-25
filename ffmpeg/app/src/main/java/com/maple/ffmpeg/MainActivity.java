@@ -3,25 +3,18 @@ package com.maple.ffmpeg;
 import android.Manifest;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.Surface;
-import android.view.SurfaceHolder;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 
 public class MainActivity extends AppCompatActivity {
-
+    final String videoPath = new File(Environment.getExternalStorageDirectory(), "a.mp4").getAbsolutePath();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,14 +42,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.btn_sound).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                final String videoPath = new File(Environment.getExternalStorageDirectory(), "test.wav").getAbsolutePath();
                 final String out = new File(Environment.getExternalStorageDirectory(), "qwww.pcm").getAbsolutePath();
                 new Thread(
                         new Runnable() {
                             @Override
                             public void run() {
                                 VideoPlayer.sound(videoPath, out);
-                                VideoPlayer.soundwavOnOpenSL(videoPath);
+                               // VideoPlayer.soundwavOnOpenSL(videoPath);
                             }
                         }
                 ).start();
@@ -81,7 +73,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void play() {
         VideoView videoView = findViewById(R.id.vv);
-        final String videoPath = new File(Environment.getExternalStorageDirectory(), "a.mp4").getAbsolutePath();
+
         final Surface surface = videoView.getHolder().getSurface();
 
         new Thread(new Runnable() {

@@ -6,7 +6,6 @@
 #include <unistd.h>
 
 
-#include "libyuv.h"
 
 
 extern "C" {
@@ -18,6 +17,7 @@ extern "C" {
 #include "libavutil/frame.h"
 #include "libavutil/mem.h"
 
+#include "libyuv.h"
 }
 
 #define LOGI(FORMAT, ...) __android_log_print(ANDROID_LOG_INFO,"native",FORMAT,##__VA_ARGS__);
