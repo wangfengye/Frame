@@ -13,8 +13,9 @@
 
 #include <queue>
 
-using namespace std;
 
+using namespace std;
+//todo; 音视频同步
 
 
 
@@ -26,6 +27,7 @@ extern "C" {
 #include "libavutil/frame.h"
 #include "libavutil/mem.h"
 #include "libyuv.h"
+#include "libavutil/time.h"
 }
 
 #define LOGI(FORMAT, ...) __android_log_print(ANDROID_LOG_INFO,"native",FORMAT,##__VA_ARGS__);
@@ -35,8 +37,8 @@ extern "C" {
 constexpr int MAX_STREAM = 3;
 constexpr int MAX_AUDIO_FRME_SIZE = 48000 * 4;
 constexpr long SLEEPING = 1000 * 16;
-
-
+constexpr long MIN_SLEEP_TIME_US = 1000ll;
+constexpr long AUDIO_TIME_ADJUST_US=-200000ll;
 extern "C" {
 queue<AVPacket *> video_frames;
 queue<AVPacket *> audio_frames;
@@ -70,8 +72,55 @@ typedef struct Player {
     //JNI
     jobject audio_track;
     jmethodID audio_track_write_mid;
+    int64_t start_time;
+    //锁
+    pthread_mutex_t mutex;
+    //条件变量
+    pthread_cond_t cond;
+    int64_t audio_clock;
 } Player;
+/**
+ * 获取视频当前播放时间
+ */
+int64_t player_get_current_video_time(Player *player) {
+    int64_t current_time = av_gettime();
+    return current_time - player->start_time;
+}
+/**
+ * 延时操作.
+ * @param player
+ * @param stream_time
+ * @param stream_no
+ */
+void player_wait_for_frame(Player *player, int64_t stream_time,
+                           int stream_no) {
+    pthread_mutex_lock(&player->mutex);
+    for (;;) {
+        int64_t current_video_time = player_get_current_video_time(player);
+        int64_t sleep_time = stream_time - current_video_time;
+        if (sleep_time < -300000ll) {
+            int64_t new_value = player->start_time - sleep_time;
+            player->start_time = new_value;
+            pthread_cond_broadcast(&player->cond);
+        }
+        if (sleep_time <= MIN_SLEEP_TIME_US) {
+            //We do not need to wait if time is slower then minimal sleep time
+            break;
+        }
+        if (sleep_time > 500000ll) {
+            // if sleep time is bigger then 500ms just sleep this 500ms
+            // and check everything again
+            sleep_time = 500000ll;
+        }
+        timespec to;
+        clock_gettime(CLOCK_REALTIME, &to);
+        to.tv_nsec = to.tv_nsec + (long) sleep_time;
 
+        int timeout_ret = pthread_cond_timedwait(&player->cond, &player->mutex,
+                                                 &to);
+    }
+    pthread_mutex_unlock(&player->mutex);
+}
 /**
  * 初始化.获取音视频索引
  * @param player 自定义封装对象
@@ -126,7 +175,7 @@ void init_codec_context(struct Player *player, int stream_idx) {
         LOGE("%s", "解码器无法打开");
         return;
     }
-    LOGI("视频格式%s",codec->name);
+    LOGI("视频格式%s", codec->name);
     player->input_codec_ctx[stream_idx] = codec_ctx;
 }
 void decode_video_frame(Player *player, AVPacket *packet) {
@@ -165,7 +214,21 @@ void decode_video_frame(Player *player, AVPacket *packet) {
                            rgb_frame->data[0], rgb_frame->linesize[0],
                            codec_ctx->width, codec_ctx->height);
         ANativeWindow_unlockAndPost(player->nativeWindow);
-        usleep(SLEEPING);
+        //todo 计算延时
+        int64_t pts = av_frame_get_best_effort_timestamp(yuv_frame);
+        double clock = yuv_frame->best_effort_timestamp * av_q2d(player->input_format_ctx->streams[player->video_stream_index]->time_base);
+        double audio_clock=player->audio_clock*av_q2d(player->input_format_ctx->streams[player->audio_stream_index]->time_base);
+        double diff=clock-audio_clock;
+        LOGI("DIFF %f",diff)
+        if (diff>0){
+            usleep(diff*1000000);
+        } else {
+
+        }
+       // int64_t time = av_rescale_q(pts,
+        //                            player->input_format_ctx->streams[player->video_stream_index]->time_base,
+         //                           AV_TIME_BASE_Q);
+        //player_wait_for_frame(player, time, player->video_stream_index);
 
     }
     av_frame_free(&yuv_frame);
@@ -230,6 +293,16 @@ void decode_audio_frame(Player *player, AVPacket *packet) {
         int out_buffer_size = av_samples_get_buffer_size(NULL, player->out_channel_nb,
                                                          frame->nb_samples, player->out_sample_fmt,
                                                          1);
+        int64_t pts = packet->pts;
+        if (pts != AV_NOPTS_VALUE) {
+            player->audio_clock = av_rescale_q(pts,
+                    player->input_format_ctx->streams[player->video_stream_index]->time_base, AV_TIME_BASE_Q);
+            player->audio_clock= frame->pts;
+            LOGI("player_write_audio - read from pts");
+           // player_wait_for_frame(player,
+             //                     player->audio_clock + AUDIO_TIME_ADJUST_US, player->audio_stream_index);
+            usleep(SLEEPING);
+        }
 
         //关联当前线程的JNIEnv
         JavaVM *javaVM = player->javaVM;
@@ -251,7 +324,7 @@ void decode_audio_frame(Player *player, AVPacket *packet) {
         env->DeleteLocalRef(audio_sample_array);
 
         javaVM->DetachCurrentThread();
-        if (NeedSleep)usleep(SLEEPING);
+
     }
 
     av_frame_free(&frame);
@@ -281,7 +354,6 @@ void *decode_audio(void *arg) {
 void *decode_data(void *arg) {
     prctl(PR_SET_NAME, "decode_data");
     auto *player = (Player *) arg;
-    AVFormatContext *format_ctx = player->input_format_ctx;
     for (;;) {
         auto *packet = (AVPacket *) av_malloc(sizeof(AVPacket));
         if (av_read_frame(player->input_format_ctx, packet) < 0) {
@@ -301,8 +373,8 @@ void *decode_data(void *arg) {
 
         }
 
-        if (video_frames.size() > 100) {
-            usleep(1000 * 16);
+        if (video_frames.size() > 500) {
+            usleep(100);
         }
     }
     return nullptr;
@@ -351,20 +423,25 @@ void *sync_play_video(void *arg) {
     prctl(PR_SET_NAME, "sync_video");
     auto *player = (Player *) arg;
     usleep(SLEEPING);
-
+    int retry = 3;
     for (;;) {
 
         if (video_frames.empty()) {
-            LOGI("Video播放终止: %d", video_frames.size());
-            usleep(SLEEPING);
-            break;
+            LOGI("VIDEO播放终止: %d,%d", video_frames.size(), audio_frames.size());
+            if (retry > 0) {
+                retry--;
+
+                continue;
+            } else {
+                break;
+            }
         }
+        retry = 3;
         AVPacket *video_packet = video_frames.front();
         video_frames.pop();
         decode_video_frame(player, video_packet);
         av_packet_free(&video_packet);
 
-        usleep(SLEEPING);
     }
     return nullptr;
 }
@@ -377,22 +454,19 @@ void *sync_play_audio(void *arg) {
 
         if (audio_frames.empty()) {
             LOGI("AUDIO播放终止: %d,%d", video_frames.size(), audio_frames.size());
-            pthread_mutex_unlock(&video_mutex);
             if (retry > 0) {
                 retry--;
-                usleep(SLEEPING);
+
                 continue;
             } else {
                 break;
             }
         }
-        retry=3;
+        retry = 3;
         AVPacket *audio_packet = audio_frames.front();
         audio_frames.pop();
         decode_audio_frame(player, audio_packet);
         av_packet_free(&audio_packet);
-
-        usleep(SLEEPING);
     }
     return nullptr;
 }
@@ -413,7 +487,8 @@ Java_com_maple_ffmpeg_VideoPlayer_play(JNIEnv *env, jclass type, jstring input_,
     //子线程解码
     //两个线程分别解码
 
-
+    pthread_mutex_init(&player->mutex,NULL);
+    pthread_cond_init(&player->cond,NULL);
     // 同步
     pthread_mutex_init(&video_mutex, nullptr);
     pthread_t decodetid;
@@ -424,6 +499,8 @@ Java_com_maple_ffmpeg_VideoPlayer_play(JNIEnv *env, jclass type, jstring input_,
     pthread_create(&(player->decode_threads[player->audio_stream_index]), nullptr, sync_play_audio,
                    player);
 
+
+    player->start_time = 0;
     pthread_join(decodetid, nullptr);
     pthread_join(player->decode_threads[player->video_stream_index], nullptr);
     pthread_join(player->decode_threads[player->audio_stream_index], nullptr);

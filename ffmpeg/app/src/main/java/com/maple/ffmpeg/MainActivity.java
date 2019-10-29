@@ -14,7 +14,7 @@ import android.widget.Toast;
 import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
-    final String videoPath = new File(Environment.getExternalStorageDirectory(), "a.mp4").getAbsolutePath();
+    final String videoPath = new File(Environment.getExternalStorageDirectory(), "gbqq2.mp4").getAbsolutePath();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
