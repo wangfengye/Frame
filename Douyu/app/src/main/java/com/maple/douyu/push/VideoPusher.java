@@ -1,6 +1,8 @@
 package com.maple.douyu.push;
 
+import android.graphics.ImageFormat;
 import android.hardware.Camera;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 import java.io.IOException;
@@ -26,6 +28,10 @@ public class VideoPusher extends Pusher implements Camera.PreviewCallback {
     @Override
     public void startPush() {
         isPushing = true;
+
+        pushNative.setVideoOptions(videoParams.getWidth(),videoParams.getHeigh(),
+                videoParams.getBitrate(),videoParams.getFps());
+        Log.i(TAG, "startPush: setVideoOptions");
         startPreview();
     }
 
@@ -55,6 +61,10 @@ public class VideoPusher extends Pusher implements Camera.PreviewCallback {
     private boolean startPreview() {
 
         mCamera = Camera.open(videoParams.getCameraId());
+        Camera.Parameters parameters = mCamera.getParameters();
+        parameters.setPreviewFormat(ImageFormat.NV21);
+        parameters.setPreviewSize(videoParams.getWidth(),videoParams.getHeigh());
+        mCamera.setParameters(parameters);
         try {
             int result;
             if (videoParams.getCameraId() == Camera.CameraInfo.CAMERA_FACING_FRONT) {
@@ -66,7 +76,7 @@ public class VideoPusher extends Pusher implements Camera.PreviewCallback {
             }
             mCamera.setDisplayOrientation(result);
             mCamera.setPreviewDisplay(surfaceHolder);
-            byte[] buffer = new byte[1024 * 500];
+            byte[] buffer = new byte[videoParams.getWidth() * videoParams.getHeigh() * 4];//必须是这个大小
             mCamera.addCallbackBuffer(buffer);
             mCamera.setPreviewCallbackWithBuffer(this);
         } catch (IOException e) {
@@ -90,5 +100,9 @@ public class VideoPusher extends Pusher implements Camera.PreviewCallback {
     @Override
     public void onPreviewFrame(byte[] bytes, Camera camera) {
         mCamera.addCallbackBuffer(bytes);
+        if(isPushing){
+            //回调函数中获取图像数据，然后给Native代码编码
+         pushNative.fireVideo(bytes);
+        }
     }
 }

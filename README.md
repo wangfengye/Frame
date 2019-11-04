@@ -70,7 +70,7 @@
 ##### [APK优化](youhua.md)
 
 ##### [IOC(butterknife)](ioc.md)
-##### [sopHix](sopHix.md)
+##### [sopHix](sophix.md)
 ##### [UI渲染](uiRender.md)
 ##### [EventBus实现]
 > 全局单例,观察者模式, 注解标记,反射缓存方法,

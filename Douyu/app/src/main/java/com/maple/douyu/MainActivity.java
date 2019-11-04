@@ -1,14 +1,12 @@
 package com.maple.douyu;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.Manifest;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.SurfaceView;
 import android.view.View;
-import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
 import com.maple.douyu.push.LivePusher;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,13 +17,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        String[] permissions=new String[]{Manifest.permission.CAMERA};
+        String[] permissions = new String[]{Manifest.permission.CAMERA};
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            requestPermissions(permissions,1);
+            requestPermissions(permissions, 1);
         }
         // Example of a call to a native method
-        SurfaceView view= findViewById(R.id.surface);
-        final LivePusher pusher=new LivePusher(view.getHolder());
+        SurfaceView view = findViewById(R.id.surface);
+        final LivePusher pusher = new LivePusher(view.getHolder());
+        pusher.pushNative.setContext(this);
         findViewById(R.id.btn_camera_switch).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -36,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 pusher.startPush();
+
             }
         });
     }

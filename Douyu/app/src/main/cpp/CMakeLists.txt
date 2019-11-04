@@ -17,9 +17,13 @@ add_library( # Sets the name of the library.
         SHARED
 
         # Provides a relative path to your source file(s).
-        native-lib.cpp)
+        native-lib.cpp include/log.h)
 add_library(x264 STATIC IMPORTED)
 set_target_properties(x264 PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}../../../../libs/${ANDROID_ABI}/libx264.a)
+add_library(faac STATIC IMPORTED)
+set_target_properties(faac PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}../../../../libs/${ANDROID_ABI}/libfaac.a)
+add_library(rtmp STATIC IMPORTED)
+set_target_properties(rtmp PROPERTIES IMPORTED_LOCATION ${CMAKE_SOURCE_DIR}../../../../libs/${ANDROID_ABI}/librtmp.a)
 find_library( # Sets the name of the path variable.
         log-lib
 
@@ -32,6 +36,6 @@ find_library( # Sets the name of the path variable.
 # build script, prebuilt third-party libraries, or system libraries.
 
 target_link_libraries( # Specifies the target library.
-        live
-        x264
-        ${log-lib})
+        live ${log-lib}       x264
+        faac
+        rtmp)

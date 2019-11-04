@@ -21,7 +21,7 @@ export LDFLAGS="-pie"
 
 function build_x264
 {
-echo "ffmpeg complie $CPU"
+echo "x264 complie $CPU"
 ./configure \
 --prefix=$PREFIX \
 --enable-static \

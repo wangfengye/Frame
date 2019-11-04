@@ -12,4 +12,13 @@
 * nginx rtmp-moudle[教程](https://www.jianshu.com/p/4ed63b041bd9)
 * red5
 
+### 客户端编写
+>  [参考协议文档](resource/H264直播总结.docx)
+* 视频下x264编码
+* 音频 faac编码
+* 推送 rtmp 协议
 
+
+### todo
+* 三个库的编译工作,之前是使用gcc,新版ndk去除了gcc,只保留clang,而库一般只提供了gcc的编译脚本.尝试使用
+clang
