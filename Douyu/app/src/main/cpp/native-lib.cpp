@@ -83,10 +83,13 @@ JavaVM *vm ;
 jmethodID mId;
 void sendMessage(const char *message) {
     JNIEnv* env ;
+    if(vm== nullptr){
+        LOGE("资源已释放,无法执行sendMessage");
+        return;
+    }
     vm->AttachCurrentThread(&env,nullptr);
     jstring  jstring1= getUTF16(env,message);
     env->CallVoidMethod(o,mId,jstring1);
-
     vm->DetachCurrentThread();
 }
 void *push_thread(void *arg) {
@@ -153,7 +156,7 @@ Java_com_maple_douyu_push_PushNative_startPush(JNIEnv *env, jobject instance, js
     env->GetJavaVM(&vm);
     o=env->NewGlobalRef(instance);
     jclass clazz = env->GetObjectClass(instance);
-     mId = env->GetMethodID(clazz, "listenFromNative", "(Ljava/lang/String;)V");
+    mId = env->GetMethodID(clazz, "listenFromNative", "(Ljava/lang/String;)V");
 
     LOGI("push start: %s", url);
     //设置推送地址
@@ -178,9 +181,13 @@ Java_com_maple_douyu_push_PushNative_stopPush(JNIEnv *env, jobject instance) {
 }extern "C"
 JNIEXPORT void JNICALL
 Java_com_maple_douyu_push_PushNative_release(JNIEnv *env, jobject instance) {
-    env->DeleteGlobalRef(o);
-    env->DeleteGlobalRef((jobject)mId);
-    env->DeleteGlobalRef(reinterpret_cast<jobject>(vm));
+    if (o!= nullptr){
+        env->DeleteGlobalRef(o);
+    }
+    mId= nullptr;
+    vm= nullptr;
+    //vm= nullptr;
+    //env->DeleteGlobalRef((jobject)vm);
 
 
 }extern "C"

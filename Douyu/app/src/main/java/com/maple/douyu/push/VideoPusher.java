@@ -44,7 +44,7 @@ public class VideoPusher extends Pusher implements Camera.PreviewCallback {
     @Override
     public void release() {
         stopPreview();
-        mCamera.release();
+        if (mCamera!=null)mCamera.release();
     }
 
 
@@ -90,9 +90,14 @@ public class VideoPusher extends Pusher implements Camera.PreviewCallback {
 
     private boolean stopPreview() {
         if (mCamera != null) {
-            mCamera.stopPreview();
-            mCamera.setPreviewCallback(null);
-            mCamera.release();
+            try {
+                mCamera.stopPreview();
+                mCamera.setPreviewCallback(null);
+                mCamera.release();
+            }catch (Exception e){
+                Log.i(TAG, "stopPreview: "+ e.getMessage());
+            }
+
         }
         return false;
     }
