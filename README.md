@@ -126,6 +126,7 @@ native部分主要通过库函数解析gif文件获取信息, 将像素信息填
 #### [内存溢出参考美团Probe](oom1.md)
 #### [电量监控](电量监控.md)
 #### [启动页优化](splash.md)
+#### [JavaGC分析](java_gc.md)
 ## JNI
 ### [文件拆分合并](ndk/Readme.md)
 ### [FMOD音效使用](VoiceChange/Readme.md)

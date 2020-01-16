@@ -52,4 +52,8 @@
 	* 逐个分析gc路径是否正常,对照代码找出异常点.
 * android device monitor as已移除(被Android Profiler取代),进入sdk tools目录下 cmd执行monitor开启
 	* 包含traveView功能
+* 页面结构分析
+	* Hierarchy Viewer tools目录下, 早就停更,需要模拟器或开发机才能使用
+	* ddms(monitor.bat中)
+	* AS tools/Layout Inspector ,只能看调试版的app.
 
