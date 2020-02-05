@@ -54,7 +54,7 @@
 	* CGLIB 用于对类的代理，把被代理对象类的 class 文件加载进来，修改其字节码生成一个继承了被代理类的子类。使用 cglib 就是为了弥补动态代理的不足。
 
 
-#### 插件化 (mainApplication,pluginmain, plugincore)
+#### 插件化 (myApplication,pluginmain, plugincore)
 
 > 核心: Java类加载机制. 通过代理ProxyActivity加载第三方activity. 难点(构造插件的资源管理器,插件activity方法必须使用ProxyActivity
 的context,需要重写大量方法.)
@@ -75,7 +75,7 @@
 ##### [EventBus实现]
 > 全局单例,观察者模式, 注解标记,反射缓存方法,
 
-#####[网络状态监听框架实现]
+##### [网络状态监听框架实现]
 > 类似EventBus的实现;`ConnectivityManager.NetworkCallback`代替广播监听系统网络切换.
 
 
