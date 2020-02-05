@@ -27,7 +27,7 @@
 2. 通过Binder方式发送消息到AMS服务.
 3. AMS检测目标进程是否存在,存在进入(6),不存在(4)
 4. socket方式通知`Zygote`进程fork目标App进程
-5 . app进程中,mian方法开始执行
+5. app进程中,mian方法开始执行
 	1. 实例化ActivityThread.
 	2. 创建ApplicationaThread,Looper,Hander对象
 	3. 调用attach方法进行binder通信
@@ -36,7 +36,7 @@
 		调用改接口将信息通知AMS.
 6. 回到AMS, AMS调用`ActivityManagerNative.onTranscat`,核心逻辑在`IAppliccationThread`中.
 通过代理对象与app进程通信(本质还是Binder)
-7 . app进程调用`ActivityThread.bindApplication`向主线程发送消息,打开Activity.
+7. app进程调用`ActivityThread.bindApplication`向主线程发送消息,打开Activity.
 
 [app启动流程 api调用图](start_process.jpg)
 
